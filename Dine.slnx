@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Dine.AppHost/Dine.AppHost.csproj" />
+  <Project Path="Dine.Application/Dine.Application.csproj" />
+  <Project Path="Dine.Domain/Dine.Domain.csproj" />
+  <Project Path="Dine.Infrastructure/Dine.Infrastructure.csproj" />
+  <Project Path="Dine.WebApi/Dine.WebApi.csproj" />
+</Solution>
