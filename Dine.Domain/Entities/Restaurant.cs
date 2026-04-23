@@ -10,4 +10,5 @@ public class Restaurant
     public List<Waiter> Waiters { get; set; } = [];
     public Guid UserId { get; set; }
     public AppUser User { get; set; } = null!;
+    public long? TelegramChatId { get; set; }
 }
