@@ -8,7 +8,7 @@ public class Restaurant
     public List<Category> Categories { get; set; } = [];
     public List<Table> Tables { get; set; } = [];
     public List<Waiter> Waiters { get; set; } = [];
-    public Guid UserId { get; set; }
-    public AppUser User { get; set; } = null!;
+    public Guid ChainId { get; set; }
+    public Chain Chain { get; set; } = null!;
     public long? TelegramChatId { get; set; }
 }
