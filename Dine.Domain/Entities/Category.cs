@@ -7,4 +7,6 @@ public class Category
     public List<MenuItem> MenuItems { get; set; } = [];
     public Guid RestaurantId { get; set; }
     public Restaurant Restaurant { get; set; } = null!;
+    public int Order { get; set; }
+    public bool IsDeleted { get; set; }
 }

@@ -5,7 +5,7 @@ public class Restaurant
     public Guid Id { get; set; }
     public required string Name { get; set; }
     public required string Slug { get; set; }
-    public List<MenuItem> MenuItems { get; set; } = [];
+    public List<Category> Categories { get; set; } = [];
     public List<Table> Tables { get; set; } = [];
     public List<Waiter> Waiters { get; set; } = [];
     public Guid UserId { get; set; }

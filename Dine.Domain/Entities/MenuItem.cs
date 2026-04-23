@@ -7,8 +7,8 @@ public class MenuItem
     public required string Description { get; set; }
     public Guid CategoryId { get; set; }
     public Category Category { get; set; } = null!;
-    public Guid RestaurantId { get; set; }
-    public Restaurant Restaurant { get; set; } = null!;
     public string? ImageUrl { get; set; }
     public decimal Price { get; set; }
+    public bool IsDeleted { get; set; }
+    public int Order { get; set; }
 }
