@@ -1,4 +1,4 @@
-namespace Dine.Domain;
+namespace Brew.Domain;
 
 public static class UserRole
 {

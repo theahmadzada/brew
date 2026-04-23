@@ -1,8 +1,8 @@
-﻿using Dine.Domain.Entities;
+﻿using Brew.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dine.Infrastructure.DbContext;
+namespace Brew.Infrastructure.DbContext;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser, AppRole, Guid>(options)
 {

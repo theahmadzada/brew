@@ -1,6 +1,6 @@
-using Dine.Domain.Enums;
+using Brew.Domain.Enums;
 
-namespace Dine.Domain.Entities;
+namespace Brew.Domain.Entities;
 
 public class Call
 {

@@ -1,4 +1,4 @@
-namespace Dine.Domain.Enums;
+namespace Brew.Domain.Enums;
 
 public enum CallStatus
 {

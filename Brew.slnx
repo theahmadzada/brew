@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Brew.AppHost\Brew.AppHost.csproj" />
+  <Project Path="Brew.Application\Brew.Application.csproj" />
+  <Project Path="Brew.Domain\Brew.Domain.csproj" />
+  <Project Path="Brew.Infrastructure\Brew.Infrastructure.csproj" />
+  <Project Path="Brew.WebApi\Brew.WebApi.csproj" />
+</Solution>
