@@ -1,9 +1,10 @@
 namespace Brew.Domain.Enums;
 
-public enum CallStatus
+public enum OrderStatus
 {
-    Pending,
+    Created,
     Accepted,   
+    Ready,
     Completed,  
     Cancelled
 }

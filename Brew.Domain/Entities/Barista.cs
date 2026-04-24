@@ -1,6 +1,6 @@
 namespace Brew.Domain.Entities;
 
-public class Waiter
+public class Barista
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }
@@ -8,5 +8,5 @@ public class Waiter
     public bool IsActive { get; set; }
     public Guid RestaurantId { get; set; }
     public Restaurant Restaurant { get; set; } = null!;
-    public List<Call> Calls { get; set; } = [];
+    public List<Order> Orders = [];
 }

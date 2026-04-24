@@ -10,6 +10,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Category> Categories { get; set; }
     public DbSet<Restaurant> Restaurants { get; set; }
     public DbSet<Table> Tables { get; set; }
-    public DbSet<Call> Calls { get; set; }
-    public DbSet<Waiter> Waiters { get; set; }
+    public DbSet<Barista> Baristas { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 }
