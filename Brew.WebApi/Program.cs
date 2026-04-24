@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuth(builder.Configuration);
+builder.Services.ConfigureMediatr();
 
 var app = builder.Build();
 

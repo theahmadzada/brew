@@ -1,8 +1,11 @@
+using System.Reflection.Metadata;
+using Brew.Application;
 using Brew.Domain.Entities;
 using Brew.Infrastructure.DbContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using AssemblyReference = Brew.Application.AssemblyReference;
 
 namespace Brew.WebApi;
 
@@ -42,6 +45,12 @@ public static class Configuration
             });
 
         services.AddAuthorization();
+        return services;
+    }
+
+    public static IServiceCollection ConfigureMediatr(this IServiceCollection services)
+    {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(AssemblyReference.Assembly));
         return services;
     }
 }
