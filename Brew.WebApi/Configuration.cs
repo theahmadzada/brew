@@ -1,6 +1,8 @@
 using Brew.Domain.Entities;
 using Brew.Infrastructure.DbContext;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Brew.WebApi;
 
@@ -19,6 +21,27 @@ public static class Configuration
 
         }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
         
+        return services;
+    }
+
+    public static IServiceCollection ConfigureAuth(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudiences = configuration.GetSection("JwtSettings:Audience").Get<string[]>(),
+                    ValidIssuers = configuration.GetSection("JwtSettings:Issuer").Get<string[]>(),
+                    IssuerSigningKey = configuration.GetSection("JwtSettings:Key").Get<SymmetricSecurityKey>(),
+                };
+            });
+
+        services.AddAuthorization();
         return services;
     }
 }

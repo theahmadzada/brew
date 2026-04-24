@@ -3,10 +3,10 @@ using Brew.WebApi;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureAuth(builder.Configuration);
 
 var app = builder.Build();
-
-builder.Services.ConfigureIdentity();
 
 if (app.Environment.IsDevelopment())
 {
@@ -14,5 +14,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
