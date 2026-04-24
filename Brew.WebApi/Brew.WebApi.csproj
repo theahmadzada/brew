@@ -14,4 +14,9 @@
       <Folder Include="Endpoints\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Brew.Domain\Brew.Domain.csproj" />
+      <ProjectReference Include="..\Brew.Infrastructure\Brew.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
