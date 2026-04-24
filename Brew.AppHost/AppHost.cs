@@ -4,8 +4,14 @@ var psql = builder.AddPostgres("brew")
     .WithDataVolume()
     .AddDatabase("brew-db");
 
-builder.AddProject<Projects.Brew_WebApi>("webapi")
+var migrations = builder.AddProject<Projects.Brew_MigrationService>("migrations")
     .WithReference(psql)
     .WaitFor(psql);
+
+builder.AddProject<Projects.Brew_WebApi>("webapi")
+    .WithReference(psql)
+    .WaitFor(psql)
+    .WithReference(migrations)
+    .WaitForCompletion(migrations);
 
 builder.Build().Run();

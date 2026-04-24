@@ -1,6 +1,6 @@
 namespace Brew.Domain.Entities;
 
-public class Barista
+public class Employee
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }

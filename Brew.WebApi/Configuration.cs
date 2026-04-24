@@ -1,7 +1,7 @@
-using System.Reflection.Metadata;
-using Brew.Application;
+using Brew.Application.Common;
 using Brew.Domain.Entities;
 using Brew.Infrastructure.DbContext;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -50,7 +50,12 @@ public static class Configuration
 
     public static IServiceCollection ConfigureMediatr(this IServiceCollection services)
     {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(AssemblyReference.Assembly));
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(AssemblyReference.Assembly);
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        });
+        
         return services;
     }
 }

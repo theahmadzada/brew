@@ -8,19 +8,19 @@
 
     <ItemGroup>
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.2.3" />
+        <PackageReference Include="FluentValidation" Version="12.1.1" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
         <PackageReference Include="MediatR" Version="14.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Endpoints\" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.14.4" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Brew.Application\Brew.Application.csproj" />
       <ProjectReference Include="..\Brew.Domain\Brew.Domain.csproj" />
       <ProjectReference Include="..\Brew.Infrastructure\Brew.Infrastructure.csproj" />
+      <ProjectReference Include="..\Brew.ServiceDefaults\Brew.ServiceDefaults.csproj" />
     </ItemGroup>
 
 </Project>

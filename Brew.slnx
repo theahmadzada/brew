@@ -3,5 +3,7 @@
   <Project Path="Brew.Application\Brew.Application.csproj" />
   <Project Path="Brew.Domain\Brew.Domain.csproj" />
   <Project Path="Brew.Infrastructure\Brew.Infrastructure.csproj" />
+  <Project Path="Brew.MigrationService/Brew.MigrationService.csproj" />
+  <Project Path="Brew.ServiceDefaults/Brew.ServiceDefaults.csproj" />
   <Project Path="Brew.WebApi\Brew.WebApi.csproj" />
 </Solution>

@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Brew.MigrationService\Brew.MigrationService.csproj" />
       <ProjectReference Include="..\Brew.WebApi\Brew.WebApi.csproj" />
     </ItemGroup>
 
