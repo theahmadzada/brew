@@ -8,4 +8,12 @@
         <UserSecretsId>1a41a7ca-8a16-4702-8340-ece150616c1f</UserSecretsId>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Brew.WebApi\Brew.WebApi.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.2.3" />
+    </ItemGroup>
+
 </Project>
