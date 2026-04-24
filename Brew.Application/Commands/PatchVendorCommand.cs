@@ -1,5 +1,4 @@
 using Brew.Application.Dto;
-using Brew.Domain.Entities;
 
 using ErrorOr;
 

@@ -1,7 +1,3 @@
-using ErrorOr;
-
-using MediatR;
-
 namespace Brew.Application.Dto;
 
 public record UpdateVendorDto
