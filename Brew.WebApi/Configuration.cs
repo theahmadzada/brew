@@ -25,8 +25,8 @@ public static class Configuration
             options.Password.RequireLowercase = true;
             options.Password.RequiredLength = 8;
             options.User.RequireUniqueEmail = true;
-
-        }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+        }).AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
         
         return services;
     }
