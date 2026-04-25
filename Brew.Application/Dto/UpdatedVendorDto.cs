@@ -1,6 +1,6 @@
 namespace Brew.Application.Dto;
 
-public class PatchedVendorDto
+public class UpdatedVendorDto
 {
     public Guid Id { get; init; }
     public required string FirstName { get; init; }

@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Brew.Application.Handlers;
 
-public class PatchVendorCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<PatchVendorCommand, ErrorOr<PatchedVendorDto>>
+public class UpdateVendorCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<UpdateVendorCommand, ErrorOr<UpdatedVendorDto>>
 {
-    public async Task<ErrorOr<PatchedVendorDto>> Handle(PatchVendorCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<UpdatedVendorDto>> Handle(UpdateVendorCommand request, CancellationToken cancellationToken)
     {
         var vendor = await userManager.FindByIdAsync(request.Id.ToString());
         if (vendor is null) return Error.NotFound("User.NotFound", "User not found");
@@ -35,7 +35,7 @@ public class PatchVendorCommandHandler(UserManager<AppUser> userManager) : IRequ
                 .Select(x => Error.Unexpected(x.Code, x.Description))
                 .ToList();
         
-        return new PatchedVendorDto()
+        return new UpdatedVendorDto()
         {
             Id = vendor.Id,
             FirstName = vendor.FirstName,
