@@ -16,6 +16,8 @@ builder.Services.AddOpenApi();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuth(builder.Configuration);
 builder.Services.ConfigureMediatr();
+builder.Services.ConfigureOptions();
+builder.Services.ConfigureServices();
 builder.Services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 

@@ -1,6 +1,10 @@
 using Brew.Application.Common;
+using Brew.Application.ServiceContracts;
+using Brew.Application.Services;
 using Brew.Domain.Entities;
 using Brew.Infrastructure.DbContext;
+using Brew.Shared;
+
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -56,6 +60,26 @@ public static class Configuration
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         });
         
+        return services;
+    }
+
+    public static IServiceCollection ConfigureOptions(this IServiceCollection services)
+    {
+        services.AddOptions<JwtSettings>()
+            .BindConfiguration(JwtSettings.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services.AddOptions<RefreshTokenSettings>()
+            .BindConfiguration(RefreshTokenSettings.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        
+        return services;
+    }
+
+    public static IServiceCollection ConfigureServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IJwtService, JwtService>();
         return services;
     }
 }
