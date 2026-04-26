@@ -13,9 +13,9 @@ public record ChangeOwnerPasswordCommand : IRequest<ErrorOr<Guid>>
     public required string NewPassword { get; init; }
 }
 
-public class ChangeVendorPasswordCommandValidator : AbstractValidator<ChangeOwnerPasswordCommand>
+public class ChangeOwnerPasswordCommandValidator : AbstractValidator<ChangeOwnerPasswordCommand>
 {
-    public ChangeVendorPasswordCommandValidator()
+    public ChangeOwnerPasswordCommandValidator()
     {
         RuleFor(x => x.Id)
             .NotNull().WithMessage("Id cannot be null");

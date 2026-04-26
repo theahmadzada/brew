@@ -2,6 +2,7 @@ using System.Security.Claims;
 
 using Brew.Application.Commands;
 using Brew.Application.Dto;
+using Brew.Domain;
 
 using MediatR;
 
@@ -14,13 +15,15 @@ public static class OwnerEndpoints
 {
     public static WebApplication MapOwnerEndpoints(this WebApplication app)
     {
-        app.MapPost("/owners", async (CreateOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
+        var group = app.MapGroup("/owners");
+        
+        group.MapPost("", async (CreateOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
 
-        app.MapPatch("/owners/{id}", async (
+        app.MapPatch("/{id}", async (
             Guid id, 
             JsonPatchDocument<UpdateOwnerDto> document, 
             ISender mediator, 
@@ -31,7 +34,7 @@ public static class OwnerEndpoints
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
         
-        app.MapPost("/owners/password", async (
+        app.MapPost("/password", async (
             ClaimsPrincipal user,
             [FromBody] ChangePasswordDto dto,
             ISender mediator,
@@ -47,7 +50,14 @@ public static class OwnerEndpoints
             };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
-        }).RequireAuthorization();
+        }).RequireAuthorization(policy => policy.RequireRole(UserRole.Owner));
+
+        app.MapDelete("/{id}", async (Guid id, ISender mediator, CancellationToken cancellationToken) =>
+        {
+            var command = new DeleteOwnerCommand { Id = id };
+            var result = await mediator.Send(command, cancellationToken);
+            return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
+        }).RequireAuthorization(policy => policy.RequireRole(UserRole.Admin));
         
         return app;
     }

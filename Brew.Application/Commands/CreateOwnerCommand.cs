@@ -13,9 +13,9 @@ public record CreateOwnerCommand : IRequest<ErrorOr<OwnerDto>>
     public required string PhoneNumber { get; set; }
 }
 
-public class CreateVendorCommandValidator : AbstractValidator<CreateOwnerCommand>
+public class CreateOwnerCommandValidator : AbstractValidator<CreateOwnerCommand>
 {
-    public CreateVendorCommandValidator()
+    public CreateOwnerCommandValidator()
     {
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required.")

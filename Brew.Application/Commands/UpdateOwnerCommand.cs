@@ -16,9 +16,9 @@ public record UpdateOwnerCommand : IRequest<ErrorOr<UpdatedOwnerDto>>
     public required JsonPatchDocument<UpdateOwnerDto> Document { get; init; }
 }
 
-public class UpdateVendorCommandValidator : AbstractValidator<UpdateOwnerCommand>
+public class UpdateOwnerCommandValidator : AbstractValidator<UpdateOwnerCommand>
 {
-    public UpdateVendorCommandValidator()
+    public UpdateOwnerCommandValidator()
     {
         RuleFor(x => x.Id)
             .NotNull().WithMessage("Id cannot be null");
