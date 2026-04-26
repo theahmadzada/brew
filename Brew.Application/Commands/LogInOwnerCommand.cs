@@ -1,8 +1,14 @@
+using Brew.Application.Dto;
+
+using ErrorOr;
+
 using FluentValidation;
+
+using MediatR;
 
 namespace Brew.Application.Commands;
 
-public record LogInOwnerCommand
+public record LogInOwnerCommand : IRequest<ErrorOr<AuthDto>>
 {
     public required string Email { get; set; }
     public required string Password { get; set; }

@@ -79,7 +79,7 @@ public static class Configuration
 
     public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
-        services.AddSingleton<IJwtService, JwtService>();
+        services.AddSingleton<ITokenService, TokenService>();
         return services;
     }
 }

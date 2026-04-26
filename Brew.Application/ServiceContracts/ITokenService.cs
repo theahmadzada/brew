@@ -4,7 +4,7 @@ using Brew.Application.Dto;
 
 namespace Brew.Application.ServiceContracts;
 
-public interface IJwtService
+public interface ITokenService
 {
     TokenDto GenerateAccessToken(IEnumerable<Claim> claims);
     TokenDto GenerateRefreshToken();

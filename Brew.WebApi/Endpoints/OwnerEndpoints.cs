@@ -23,6 +23,12 @@ public static class OwnerEndpoints
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
 
+        app.MapPost("", async (LogInOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
+        {
+            var result = await mediator.Send(command, cancellationToken);
+            return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
+        });
+        
         app.MapPatch("/{id}", async (
             Guid id, 
             JsonPatchDocument<UpdateOwnerDto> document, 

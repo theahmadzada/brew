@@ -12,9 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Brew.Application.Services;
 
-public class JwtService(
+public class TokenService(
     IOptions<JwtSettings> jwtSettings, 
-    IOptions<RefreshTokenSettings> refreshTokenSettings) : IJwtService
+    IOptions<RefreshTokenSettings> refreshTokenSettings) : ITokenService
 {
     public TokenDto GenerateAccessToken(IEnumerable<Claim> claims)
     {
