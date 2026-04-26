@@ -6,7 +6,7 @@ using Brew.Domain;
 
 using MediatR;
 
-using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Brew.WebApi.Endpoints;
@@ -17,19 +17,19 @@ public static class OwnerEndpoints
     {
         var group = app.MapGroup("/owners");
         
-        group.MapPost("", async (CreateOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
+        group.MapPost("/", async (CreateOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
 
-        app.MapPost("", async (LogInOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
+        group.MapPost("/auth", async (LogInOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
         
-        app.MapPatch("/{id}", async (
+        group.MapPatch("/{id}", async (
             Guid id, 
             JsonPatchDocument<UpdateOwnerDto> document, 
             ISender mediator, 
@@ -40,7 +40,7 @@ public static class OwnerEndpoints
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
         
-        app.MapPost("/password", async (
+        group.MapPost("/password", async (
             ClaimsPrincipal user,
             [FromBody] ChangePasswordDto dto,
             ISender mediator,
@@ -58,7 +58,7 @@ public static class OwnerEndpoints
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         }).RequireAuthorization(policy => policy.RequireRole(UserRole.Owner));
 
-        app.MapDelete("/{id}", async (Guid id, ISender mediator, CancellationToken cancellationToken) =>
+        group.MapDelete("/{id}", async (Guid id, ISender mediator, CancellationToken cancellationToken) =>
         {
             var command = new DeleteOwnerCommand { Id = id };
             var result = await mediator.Send(command, cancellationToken);

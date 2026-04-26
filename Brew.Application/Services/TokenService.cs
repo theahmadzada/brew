@@ -5,7 +5,7 @@ using System.Text;
 
 using Brew.Application.Dto;
 using Brew.Application.ServiceContracts;
-using Brew.Shared;
+using Brew.Shared.Settings;
 
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

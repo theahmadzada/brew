@@ -6,7 +6,7 @@ using FluentValidation;
 
 using MediatR;
 
-using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 
 namespace Brew.Application.Commands;
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Brew.Shared;
+namespace Brew.Shared.Settings;
 
 public record JwtSettings
 {

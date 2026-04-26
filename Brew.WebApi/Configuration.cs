@@ -3,7 +3,7 @@ using Brew.Application.ServiceContracts;
 using Brew.Application.Services;
 using Brew.Domain.Entities;
 using Brew.Infrastructure.DbContext;
-using Brew.Shared;
+using Brew.Shared.Settings;
 
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -6,13 +6,18 @@ using Brew.WebApi.Endpoints;
 using Brew.WebApi.ExceptionHandler;
 
 using FluentValidation;
+
+using Microsoft.EntityFrameworkCore;
+
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddNpgsqlDbContext<AppDbContext>("brew-db");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("brew-db")));
 builder.Services.AddOpenApi();
+builder.Services.AddProblemDetails();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuth(builder.Configuration);
 builder.Services.ConfigureMediatr();

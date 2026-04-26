@@ -46,7 +46,7 @@ public class CreateOwnerCommandHandler(
             
             var owner = new Owner() { UserId = newUser.Id, User = newUser };
             
-            await dbContext.AddAsync(owner, cancellationToken);
+            await dbContext.Owners.AddAsync(owner, cancellationToken);
             await dbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }

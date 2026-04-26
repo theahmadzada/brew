@@ -3,6 +3,7 @@ using System;
 using Brew.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Brew.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260426105342_AddOwnerEntity")]
+    partial class AddOwnerEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,12 +173,17 @@ namespace Brew.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("OwnerId")
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Chain");
                 });
@@ -475,13 +483,17 @@ namespace Brew.Infrastructure.Migrations
 
             modelBuilder.Entity("Brew.Domain.Entities.Chain", b =>
                 {
-                    b.HasOne("Brew.Domain.Entities.Owner", "Owner")
+                    b.HasOne("Brew.Domain.Entities.Owner", null)
                         .WithMany("Chains")
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("OwnerId");
+
+                    b.HasOne("Brew.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Owner");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Brew.Domain.Entities.Employee", b =>
