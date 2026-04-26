@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Brew.Application.Commands;
 
-public record CreateVendorCommand : IRequest<ErrorOr<VendorDto>>
+public record CreateOwnerCommand : IRequest<ErrorOr<OwnerDto>>
 {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
@@ -13,17 +13,20 @@ public record CreateVendorCommand : IRequest<ErrorOr<VendorDto>>
     public required string PhoneNumber { get; set; }
 }
 
-public class CreateVendorCommandValidator : AbstractValidator<CreateVendorCommand>
+public class CreateVendorCommandValidator : AbstractValidator<CreateOwnerCommand>
 {
     public CreateVendorCommandValidator()
     {
         RuleFor(x => x.FirstName)
-            .NotEmpty().WithMessage("First name is required.");
+            .NotEmpty().WithMessage("First name is required.")
+            .MaximumLength(50).WithMessage("First name cannot exceed 50 characters.");
         RuleFor(x => x.LastName)
-            .NotEmpty().WithMessage("Last name is required.");
+            .NotEmpty().WithMessage("Last name is required.")
+            .MaximumLength(50).WithMessage("Last name cannot exceed 50 characters.");
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")
-            .EmailAddress().WithMessage("Invalid email address.");
+            .EmailAddress().WithMessage("Invalid email address.")
+            .MaximumLength(50).WithMessage("Email cannot exceed 50 characters.");
         RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("Phone number is required.");
     }

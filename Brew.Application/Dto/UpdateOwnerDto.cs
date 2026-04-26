@@ -1,6 +1,6 @@
 namespace Brew.Application.Dto;
 
-public record UpdateVendorDto
+public record UpdateOwnerDto
 {
     public string? FirstName { get; init; }
     public string? LastName { get; init; }

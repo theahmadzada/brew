@@ -10,14 +10,14 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Brew.Application.Handlers;
 
-public class UpdateVendorCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<UpdateVendorCommand, ErrorOr<UpdatedVendorDto>>
+public class UpdateOwnerCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<UpdateOwnerCommand, ErrorOr<UpdatedOwnerDto>>
 {
-    public async Task<ErrorOr<UpdatedVendorDto>> Handle(UpdateVendorCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<UpdatedOwnerDto>> Handle(UpdateOwnerCommand request, CancellationToken cancellationToken)
     {
         var vendor = await userManager.FindByIdAsync(request.Id.ToString());
         if (vendor is null) return Error.NotFound("User.NotFound", "User not found");
 
-        var dto = new UpdateVendorDto()
+        var dto = new UpdateOwnerDto()
         {
             FirstName = vendor.FirstName,
             LastName = vendor.LastName,
@@ -35,7 +35,7 @@ public class UpdateVendorCommandHandler(UserManager<AppUser> userManager) : IReq
                 .Select(x => Error.Unexpected(x.Code, x.Description))
                 .ToList();
         
-        return new UpdatedVendorDto()
+        return new UpdatedOwnerDto()
         {
             Id = vendor.Id,
             FirstName = vendor.FirstName,

@@ -10,28 +10,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Brew.WebApi.Endpoints;
 
-public static class VendorEndpoints
+public static class OwnerEndpoints
 {
-    public static WebApplication MapVendorEndpoints(this WebApplication app)
+    public static WebApplication MapOwnerEndpoints(this WebApplication app)
     {
-        app.MapPost("/vendors", async (CreateVendorCommand command, ISender mediator, CancellationToken cancellationToken) =>
+        app.MapPost("/owners", async (CreateOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
 
-        app.MapPatch("/vendors/{id}", async (
+        app.MapPatch("/owners/{id}", async (
             Guid id, 
-            JsonPatchDocument<UpdateVendorDto> document, 
+            JsonPatchDocument<UpdateOwnerDto> document, 
             ISender mediator, 
             CancellationToken cancellationToken) =>
         {
-            var command = new UpdateVendorCommand{Id = id, Document = document};
+            var command = new UpdateOwnerCommand{Id = id, Document = document};
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
         
-        app.MapPost("/vendor/password", async (
+        app.MapPost("/owners/password", async (
             ClaimsPrincipal user,
             [FromBody] ChangePasswordDto dto,
             ISender mediator,
@@ -41,7 +41,7 @@ public static class VendorEndpoints
             if(!Guid.TryParse(id, out var parsedId))
                 return Results.Problem(detail: "Invalid id", statusCode: 401);
             
-            var command = new ChangeVendorPasswordCommand()
+            var command = new ChangeOwnerPasswordCommand()
             {
                 Id = parsedId, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
             };

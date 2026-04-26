@@ -1,6 +1,6 @@
 namespace Brew.Domain.Entities;
 
-public class Vendor
+public class Owner
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

@@ -10,13 +10,13 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace Brew.Application.Commands;
 
-public record UpdateVendorCommand : IRequest<ErrorOr<UpdatedVendorDto>>
+public record UpdateOwnerCommand : IRequest<ErrorOr<UpdatedOwnerDto>>
 {
     public Guid Id { get; init; }
-    public required JsonPatchDocument<UpdateVendorDto> Document { get; init; }
+    public required JsonPatchDocument<UpdateOwnerDto> Document { get; init; }
 }
 
-public class UpdateVendorCommandValidator : AbstractValidator<UpdateVendorCommand>
+public class UpdateVendorCommandValidator : AbstractValidator<UpdateOwnerCommand>
 {
     public UpdateVendorCommandValidator()
     {

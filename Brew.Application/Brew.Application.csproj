@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Brew.Domain\Brew.Domain.csproj" />
+      <ProjectReference Include="..\Brew.Infrastructure\Brew.Infrastructure.csproj" />
       <ProjectReference Include="..\Brew.Shared\Brew.Shared.csproj" />
     </ItemGroup>
 

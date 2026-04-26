@@ -35,5 +35,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapVendorEndpoints();
+app.MapOwnerEndpoints();
 app.Run();
