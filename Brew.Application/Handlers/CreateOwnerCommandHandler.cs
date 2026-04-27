@@ -35,7 +35,7 @@ public class CreateOwnerCommandHandler(
             var result = await userManager.CreateAsync(newUser, password);
             if (!result.Succeeded)
                 return result.Errors
-                    .Select(x => Error.Unexpected(x.Code, x.Description))
+                    .Select(x => Error.Validation(x.Code, x.Description))
                     .ToList();
 
             var roleResult = await userManager.AddToRoleAsync(newUser, UserRole.Owner);

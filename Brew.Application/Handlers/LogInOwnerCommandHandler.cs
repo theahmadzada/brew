@@ -22,7 +22,7 @@ public class LogInOwnerCommandHandler(
     {
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user is null)
-            return Error.NotFound("User.InvalidCredentials", "Invalid email or password");
+            return Error.Unauthorized("User.InvalidCredentials", "Invalid email or password");
 
         var result = await signInManager.CheckPasswordSignInAsync(user, request.Password, true);
         if(!result.Succeeded)

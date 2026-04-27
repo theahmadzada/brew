@@ -14,22 +14,22 @@ public class UpdateOwnerCommandHandler(UserManager<AppUser> userManager) : IRequ
 {
     public async Task<ErrorOr<UpdatedOwnerDto>> Handle(UpdateOwnerCommand request, CancellationToken cancellationToken)
     {
-        var vendor = await userManager.FindByIdAsync(request.Id.ToString());
-        if (vendor is null) return Error.NotFound("User.NotFound", "User not found");
+        var owner = await userManager.FindByIdAsync(request.Id.ToString());
+        if (owner is null) return Error.NotFound("User.NotFound", "User not found");
 
         var dto = new PatchOwnerDto()
         {
-            FirstName = vendor.FirstName,
-            LastName = vendor.LastName,
-            PhoneNumber = vendor.PhoneNumber,
+            FirstName = owner.FirstName,
+            LastName = owner.LastName,
+            PhoneNumber = owner.PhoneNumber,
         };
         
         request.Document.ApplyTo(dto);
-        vendor.FirstName = dto.FirstName;
-        vendor.LastName = dto.LastName;
-        vendor.PhoneNumber = dto.PhoneNumber;
+        owner.FirstName = dto.FirstName;
+        owner.LastName = dto.LastName;
+        owner.PhoneNumber = dto.PhoneNumber;
 
-        var result = await userManager.UpdateAsync(vendor);
+        var result = await userManager.UpdateAsync(owner);
         if (!result.Succeeded)
             return result.Errors
                 .Select(x => Error.Unexpected(x.Code, x.Description))
@@ -37,11 +37,11 @@ public class UpdateOwnerCommandHandler(UserManager<AppUser> userManager) : IRequ
         
         return new UpdatedOwnerDto()
         {
-            Id = vendor.Id,
-            FirstName = vendor.FirstName,
-            LastName = vendor.LastName,
-            Email = vendor.Email!,
-            PhoneNumber = vendor.PhoneNumber!
+            Id = owner.Id,
+            FirstName = owner.FirstName,
+            LastName = owner.LastName,
+            Email = owner.Email!,
+            PhoneNumber = owner.PhoneNumber!
         };
     }
 }

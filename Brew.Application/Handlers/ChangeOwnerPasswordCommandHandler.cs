@@ -19,7 +19,7 @@ public class ChangeOwnerPasswordCommandHandler(UserManager<AppUser> userManager)
         var result = await userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
         if (!result.Succeeded)
             return result.Errors
-                .Select(x => Error.Unexpected(x.Code, x.Description))
+                .Select(x => Error.Validation(x.Code, x.Description))
                 .ToList();
 
         return user.Id;
