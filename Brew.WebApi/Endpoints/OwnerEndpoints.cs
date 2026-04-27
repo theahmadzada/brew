@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Brew.Application.Commands;
 using Brew.Application.Dto;
 using Brew.Domain;
+using Brew.WebApi.Extensions;
 
 using MediatR;
 
@@ -19,13 +20,13 @@ public static class OwnerEndpoints
         group.MapPost("/", async (CreateOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.Send(command, cancellationToken);
-            return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
 
         group.MapPost("/login", async (LogInOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.Send(command, cancellationToken);
-            return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
         
         group.MapPatch("/{id}", async (
@@ -35,7 +36,7 @@ public static class OwnerEndpoints
         {
             var command = new UpdateOwnerCommand { Id = dto.Id, Document = dto.Document };
             var result = await mediator.Send(command, cancellationToken);
-            return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
         
         group.MapPost("/password", async (
@@ -53,26 +54,16 @@ public static class OwnerEndpoints
                 Id = id.Value, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
             };
             var result = await mediator.Send(command, cancellationToken);
-            return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).RequireAuthorization(policy => policy.RequireRole(UserRole.Owner));
 
         group.MapDelete("/{id}", async (Guid id, ISender mediator, CancellationToken cancellationToken) =>
         {
             var command = new DeleteOwnerCommand { Id = id };
             var result = await mediator.Send(command, cancellationToken);
-            return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).RequireAuthorization(policy => policy.RequireRole(UserRole.Admin));
         
         return app;
-    }
-}
-
-public static class UserClaimsExtension
-{
-    public static Guid? GetUserId(this ClaimsPrincipal principal)
-    {
-        var id = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        Guid.TryParse(id, out var parsedId);
-        return parsedId;
     }
 }

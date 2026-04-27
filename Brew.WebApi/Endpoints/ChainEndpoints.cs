@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Brew.Application.Commands;
 using Brew.Application.Dto;
 using Brew.Domain;
+using Brew.WebApi.Extensions;
 
 using MediatR;
 
@@ -24,7 +25,7 @@ public static class ChainEndpoints
 
             var command = new CreateChainCommand() { Name = dto.Name, UserId = id.Value };
             var result = await mediator.Send(command, cancellationToken);
-            return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));
         
         return app;
