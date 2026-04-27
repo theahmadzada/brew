@@ -44,9 +44,9 @@ public class CreateOwnerCommandHandler(
                     .Select(x => Error.Unexpected(x.Code, x.Description))
                     .ToList();
             
-            var owner = new Owner() { UserId = newUser.Id, User = newUser };
+            var owner = new Owner() { AppUserId = newUser.Id, AppUser = newUser };
             
-            await dbContext.Owners.AddAsync(owner, cancellationToken);
+            dbContext.Owners.Add(owner);
             await dbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }

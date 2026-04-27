@@ -21,13 +21,13 @@ public class TokenService(
         var options = jwtSettings.Value;
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SigningKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.UtcNow.AddMinutes(options.ValidFor);
+        var expires = DateTimeOffset.UtcNow.AddMinutes(options.ValidFor);
 
         var token = new JwtSecurityToken(
             issuer: options.Issuer,
             audience: options.Audience,
             claims: claims,
-            expires: expires,
+            expires: expires.UtcDateTime,
             signingCredentials: credentials);
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);

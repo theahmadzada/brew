@@ -13,7 +13,7 @@ namespace Brew.Application.Commands;
 public record UpdateOwnerCommand : IRequest<ErrorOr<UpdatedOwnerDto>>
 {
     public Guid Id { get; init; }
-    public required JsonPatchDocument<UpdateOwnerDto> Document { get; init; }
+    public required JsonPatchDocument<PatchOwnerDto> Document { get; init; }
 }
 
 public class UpdateOwnerCommandValidator : AbstractValidator<UpdateOwnerCommand>

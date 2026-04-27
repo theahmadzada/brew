@@ -40,5 +40,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapOwnerEndpoints();
+app.MapOwnerEndpoints()
+    .MapChainEndpoints();
 app.Run();

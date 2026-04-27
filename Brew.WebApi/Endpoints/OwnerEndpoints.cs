@@ -6,7 +6,6 @@ using Brew.Domain;
 
 using MediatR;
 
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Brew.WebApi.Endpoints;
@@ -15,7 +14,7 @@ public static class OwnerEndpoints
 {
     public static WebApplication MapOwnerEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/owners");
+        var group = app.MapGroup("api/owners");
         
         group.MapPost("/", async (CreateOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
         {
@@ -23,19 +22,18 @@ public static class OwnerEndpoints
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
 
-        group.MapPost("/auth", async (LogInOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
+        group.MapPost("/login", async (LogInOwnerCommand command, ISender mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
         
         group.MapPatch("/{id}", async (
-            Guid id, 
-            JsonPatchDocument<UpdateOwnerDto> document, 
+            UpdateOwnerDto dto, 
             ISender mediator, 
             CancellationToken cancellationToken) =>
         {
-            var command = new UpdateOwnerCommand{Id = id, Document = document};
+            var command = new UpdateOwnerCommand { Id = dto.Id, Document = dto.Document };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
         });
@@ -46,13 +44,13 @@ public static class OwnerEndpoints
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if(!Guid.TryParse(id, out var parsedId))
-                return Results.Problem(detail: "Invalid id", statusCode: 401);
+            var id = user.GetUserId();
+            if(id is null)
+                return Results.Unauthorized();
             
             var command = new ChangeOwnerPasswordCommand()
             {
-                Id = parsedId, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
+                Id = id.Value, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
             };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => Results.BadRequest(errors));
@@ -66,5 +64,15 @@ public static class OwnerEndpoints
         }).RequireAuthorization(policy => policy.RequireRole(UserRole.Admin));
         
         return app;
+    }
+}
+
+public static class UserClaimsExtension
+{
+    public static Guid? GetUserId(this ClaimsPrincipal principal)
+    {
+        var id = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        Guid.TryParse(id, out var parsedId);
+        return parsedId;
     }
 }

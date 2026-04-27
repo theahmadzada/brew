@@ -10,29 +10,29 @@ using ErrorOr;
 using MediatR;
 
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Brew.Application.Handlers;
 
 public class LogInOwnerCommandHandler(
     UserManager<AppUser> userManager,
+    SignInManager<AppUser> signInManager,
     ITokenService tokenService) : IRequestHandler<LogInOwnerCommand, ErrorOr<AuthDto>>
 {
     public async Task<ErrorOr<AuthDto>> Handle(LogInOwnerCommand request, CancellationToken cancellationToken)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user is null)
-            return Error.NotFound("User.NotFound", "User not found");
+            return Error.NotFound("User.InvalidCredentials", "Invalid email or password");
 
-        var result = await userManager.CheckPasswordAsync(user, request.Password);
-        if(!result)
-            return Error.Unauthorized("User.Unauthorized", "User unauthorized");
+        var result = await signInManager.CheckPasswordSignInAsync(user, request.Password, true);
+        if(!result.Succeeded)
+            return Error.Unauthorized("User.InvalidCredentials", "Invalid email or password");
 
         var roles = await userManager.GetRolesAsync(user);
         var claims = new List<Claim>([
-            new Claim(JwtRegisteredClaimNames.Email, request.Email),
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Email, user.Email!),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim("jti", Guid.NewGuid().ToString()),
         ]);
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 

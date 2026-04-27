@@ -17,7 +17,7 @@ public class UpdateOwnerCommandHandler(UserManager<AppUser> userManager) : IRequ
         var vendor = await userManager.FindByIdAsync(request.Id.ToString());
         if (vendor is null) return Error.NotFound("User.NotFound", "User not found");
 
-        var dto = new UpdateOwnerDto()
+        var dto = new PatchOwnerDto()
         {
             FirstName = vendor.FirstName,
             LastName = vendor.LastName,

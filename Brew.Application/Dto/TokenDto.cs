@@ -2,6 +2,6 @@ namespace Brew.Application.Dto;
 
 public record TokenDto
 {
-    public required string Token { get; set; }
-    public DateTimeOffset Expires { get; set; }
+    public required string Token { get; init; }
+    public DateTimeOffset Expires { get; init; }
 };

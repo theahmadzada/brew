@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+
 namespace Brew.Application.Dto;
 
 public record UpdateOwnerDto
 {
-    public string? FirstName { get; init; }
-    public string? LastName { get; init; }
-    public string? PhoneNumber { get; init; }
-}
+    public Guid Id { get; init; }
+    public required JsonPatchDocument<PatchOwnerDto> Document { get; init; }
+};
