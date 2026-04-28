@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Brew.Application.Handlers.Chain;
 
-public class GetChainByIdCommandHandler(AppDbContext context) : IRequestHandler<GetChainByIdCommand, ErrorOr<GetChainByIdDto>>
+public class GetChainByIdCommandHandler(AppDbContext context) : IRequestHandler<GetChainByIdQuery, ErrorOr<GetChainByIdDto>>
 {
-    public async Task<ErrorOr<GetChainByIdDto>> Handle(GetChainByIdCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<GetChainByIdDto>> Handle(GetChainByIdQuery request, CancellationToken cancellationToken)
     {
         var chain = await context.Chains
             .Where(x => x.Owner.Id == request.OwnerId && x.Id == request.Id)

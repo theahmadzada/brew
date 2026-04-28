@@ -43,10 +43,24 @@ public static class ChainEndpoints
             if (ownerId is null)
                 return Results.Unauthorized();
 
-            var command = new GetChainByIdCommand() { Id = id, OwnerId = ownerId.Value };
-            var result = await mediator.Send(command, cancellationToken);
+            var query = new GetChainByIdQuery() { Id = id, OwnerId = ownerId.Value };
+            var result = await mediator.Send(query, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        });
+        }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));
+
+        group.MapGet("/", async (
+            ClaimsPrincipal user,
+            IMediator mediator,
+            CancellationToken cancellationToken) =>
+        {
+            var ownerId = user.GetUserId();
+            if (ownerId is null)
+                return Results.Unauthorized();
+
+            var query = new GetAllOwnerChainsQuery() { OwnerId = ownerId.Value };
+            var result = await mediator.Send(query, cancellationToken);
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
+        }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));
         
         return app;
     }

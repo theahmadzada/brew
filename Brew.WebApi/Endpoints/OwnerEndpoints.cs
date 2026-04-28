@@ -43,7 +43,7 @@ public static class OwnerEndpoints
             var command = new UpdateOwnerCommand { Id = dto.Id, Document = dto.Document };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        });
+        }).RequireAuthorization(policy => policy.RequireRole(UserRole.Owner));
         
         group.MapPost("/password", async (
             [FromBody] ChangePasswordDto dto,
@@ -71,7 +71,11 @@ public static class OwnerEndpoints
             var command = new DeleteOwnerCommand { Id = id };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        }).RequireAuthorization(policy => policy.RequireRole(UserRole.Admin));
+        }).RequireAuthorization(policy =>
+        {
+            policy.RequireRole(UserRole.Owner);
+            policy.RequireRole(UserRole.Admin);
+        });
         
         return app;
     }
