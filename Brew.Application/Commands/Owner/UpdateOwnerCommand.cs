@@ -8,7 +8,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 
-namespace Brew.Application.Commands;
+namespace Brew.Application.Commands.Owner;
 
 public record UpdateOwnerCommand : IRequest<ErrorOr<UpdatedOwnerDto>>
 {

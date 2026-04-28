@@ -1,9 +1,12 @@
 ﻿using Brew.Application.Dto;
+
 using ErrorOr;
+
 using FluentValidation;
+
 using MediatR;
 
-namespace Brew.Application.Commands;
+namespace Brew.Application.Commands.Owner;
 
 public record CreateOwnerCommand : IRequest<ErrorOr<OwnerDto>>
 {

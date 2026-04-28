@@ -14,6 +14,7 @@ public static class ProblemExtensions
             ErrorType.Conflict => Results.Conflict(errors),
             ErrorType.Forbidden => Results.Forbid(),
             ErrorType.Failure => Results.Problem(),
+            ErrorType.Unexpected => Results.Problem(),
             _ => Results.BadRequest(errors)
         };
     }

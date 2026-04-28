@@ -1,7 +1,8 @@
 using System.Security.Claims;
 
-using Brew.Application.Commands;
+using Brew.Application.Commands.Chain;
 using Brew.Application.Dto;
+using Brew.Application.Queries.Chain;
 using Brew.Domain;
 using Brew.WebApi.Extensions;
 
@@ -17,7 +18,11 @@ public static class ChainEndpoints
     {
         var group = app.MapGroup("/api/chains");
 
-        group.MapPost("/", async (ClaimsPrincipal user, [FromBody] CreateChainDto dto, ISender mediator, CancellationToken cancellationToken) =>
+        group.MapPost("/", async (
+            [FromBody] CreateChainDto dto, 
+            ClaimsPrincipal user, 
+            ISender mediator, 
+            CancellationToken cancellationToken) =>
         {
             var id = user.GetUserId();
             if (id is null) 
@@ -27,6 +32,21 @@ public static class ChainEndpoints
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));
+
+        group.MapGet("/{id}", async (
+            Guid id, 
+            ClaimsPrincipal user, 
+            ISender mediator, 
+            CancellationToken cancellationToken) =>
+        {
+            var ownerId = user.GetUserId();
+            if (ownerId is null)
+                return Results.Unauthorized();
+
+            var command = new GetChainByIdCommand() { Id = id, OwnerId = ownerId.Value };
+            var result = await mediator.Send(command, cancellationToken);
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
+        });
         
         return app;
     }

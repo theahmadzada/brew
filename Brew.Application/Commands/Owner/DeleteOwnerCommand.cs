@@ -4,7 +4,7 @@ using FluentValidation;
 
 using MediatR;
 
-namespace Brew.Application.Commands;
+namespace Brew.Application.Commands.Owner;
 
 public record DeleteOwnerCommand : IRequest<ErrorOr<Guid>>
 {

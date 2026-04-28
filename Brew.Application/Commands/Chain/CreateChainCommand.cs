@@ -6,7 +6,7 @@ using FluentValidation;
 
 using MediatR;
 
-namespace Brew.Application.Commands;
+namespace Brew.Application.Commands.Chain;
 
 public record CreateChainCommand : IRequest<ErrorOr<ChainDto>>
 {

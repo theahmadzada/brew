@@ -6,7 +6,7 @@ using FluentValidation;
 
 using MediatR;
 
-namespace Brew.Application.Commands;
+namespace Brew.Application.Commands.Owner;
 
 public record LogInOwnerCommand : IRequest<ErrorOr<AuthDto>>
 {

@@ -1,3 +1,5 @@
+using System.Text;
+
 using Brew.Application.Common;
 using Brew.Application.ServiceContracts;
 using Brew.Application.Services;
@@ -17,7 +19,7 @@ public static class Configuration
 {
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
-        services.AddIdentity<AppUser, AppRole>(options =>
+        services.AddIdentityCore<AppUser>(options =>
         {
             options.Password.RequireDigit = true;
             options.Password.RequireNonAlphanumeric = true;
@@ -25,7 +27,8 @@ public static class Configuration
             options.Password.RequireLowercase = true;
             options.Password.RequiredLength = 8;
             options.User.RequireUniqueEmail = true;
-        }).AddEntityFrameworkStores<AppDbContext>()
+        }).AddRoles<AppRole>()
+            .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
         
         return services;
@@ -33,7 +36,12 @@ public static class Configuration
 
     public static IServiceCollection ConfigureAuth(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -42,9 +50,9 @@ public static class Configuration
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidAudiences = configuration.GetSection("JwtSettings:Audience").Get<string[]>(),
-                    ValidIssuers = configuration.GetSection("JwtSettings:Issuer").Get<string[]>(),
-                    IssuerSigningKey = configuration.GetSection("JwtSettings:Key").Get<SymmetricSecurityKey>(),
+                    ValidAudience = configuration["JwtSettings:Audience"],
+                    ValidIssuer = configuration["JwtSettings:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SigningKey"]!))
                 };
             });
 

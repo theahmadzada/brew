@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-using Brew.Application.Commands;
+using Brew.Application.Commands.Owner;
 using Brew.Application.Dto;
 using Brew.Application.ServiceContracts;
 using Brew.Domain.Entities;
@@ -11,11 +11,10 @@ using MediatR;
 
 using Microsoft.AspNetCore.Identity;
 
-namespace Brew.Application.Handlers;
+namespace Brew.Application.Handlers.Owner;
 
 public class LogInOwnerCommandHandler(
     UserManager<AppUser> userManager,
-    SignInManager<AppUser> signInManager,
     ITokenService tokenService) : IRequestHandler<LogInOwnerCommand, ErrorOr<AuthDto>>
 {
     public async Task<ErrorOr<AuthDto>> Handle(LogInOwnerCommand request, CancellationToken cancellationToken)
@@ -24,10 +23,28 @@ public class LogInOwnerCommandHandler(
         if (user is null)
             return Error.Unauthorized("User.InvalidCredentials", "Invalid email or password");
 
-        var result = await signInManager.CheckPasswordSignInAsync(user, request.Password, true);
-        if(!result.Succeeded)
+        var lockedOut = await userManager.IsLockedOutAsync(user);
+        if(lockedOut)
+            return Error.Unauthorized("User.LockedOut", "You are not allowed to log in");
+        
+        var result = await userManager.CheckPasswordAsync(user, request.Password);
+        if(!result)
+        {
+            var accessFailed = await userManager.AccessFailedAsync(user);
+            if(!accessFailed.Succeeded)
+                return accessFailed.Errors
+                    .Select(x => Error.Unexpected(x.Code, x.Description))
+                    .ToList();
+            
             return Error.Unauthorized("User.InvalidCredentials", "Invalid email or password");
+        }
 
+        var resetAccessFailedCount = await userManager.ResetAccessFailedCountAsync(user);
+        if (resetAccessFailedCount.Succeeded)
+            return resetAccessFailedCount.Errors
+                .Select(x => Error.Unexpected(x.Code, x.Description))
+                .ToList();
+        
         var roles = await userManager.GetRolesAsync(user);
         var claims = new List<Claim>([
             new Claim(ClaimTypes.Email, user.Email!),

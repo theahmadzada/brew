@@ -1,6 +1,5 @@
-using Brew.Application.Commands;
+using Brew.Application.Commands.Chain;
 using Brew.Application.Dto;
-using Brew.Domain.Entities;
 using Brew.Infrastructure.DbContext;
 
 using ErrorOr;
@@ -9,7 +8,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Brew.Application.Handlers;
+namespace Brew.Application.Handlers.Chain;
 
 public class CreateChainCommandHandler(AppDbContext dbContext) : IRequestHandler<CreateChainCommand, ErrorOr<ChainDto>>
 {
@@ -22,7 +21,7 @@ public class CreateChainCommandHandler(AppDbContext dbContext) : IRequestHandler
         if(ownerId == Guid.Empty)
             return Error.NotFound("Owner.NotFound", "Owner not found");
 
-        var chain = new Chain() { OwnerId = ownerId, Name = request.Name };
+        var chain = new Domain.Entities.Chain() { OwnerId = ownerId, Name = request.Name };
         dbContext.Chains.Add(chain);
         await dbContext.SaveChangesAsync(cancellationToken);
 

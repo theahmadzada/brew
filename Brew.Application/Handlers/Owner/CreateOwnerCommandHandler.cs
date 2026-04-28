@@ -1,14 +1,16 @@
-using Brew.Application.Commands;
+using Brew.Application.Commands.Owner;
 using Brew.Application.Dto;
 using Brew.Domain;
 using Brew.Domain.Entities;
 using Brew.Infrastructure.DbContext;
 
 using ErrorOr;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Identity;
 
-namespace Brew.Application.Handlers;
+namespace Brew.Application.Handlers.Owner;
 
 public class CreateOwnerCommandHandler(
     UserManager<AppUser> userManager,
@@ -44,7 +46,7 @@ public class CreateOwnerCommandHandler(
                     .Select(x => Error.Unexpected(x.Code, x.Description))
                     .ToList();
             
-            var owner = new Owner() { AppUserId = newUser.Id, AppUser = newUser };
+            var owner = new Domain.Entities.Owner() { AppUserId = newUser.Id, AppUser = newUser };
             
             dbContext.Owners.Add(owner);
             await dbContext.SaveChangesAsync(cancellationToken);

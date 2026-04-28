@@ -1,4 +1,4 @@
-using Brew.Application.Commands;
+using Brew.Application.Commands.Owner;
 using Brew.Application.Dto;
 using Brew.Domain.Entities;
 
@@ -8,7 +8,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Identity;
 
-namespace Brew.Application.Handlers;
+namespace Brew.Application.Handlers.Owner;
 
 public class UpdateOwnerCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<UpdateOwnerCommand, ErrorOr<UpdatedOwnerDto>>
 {

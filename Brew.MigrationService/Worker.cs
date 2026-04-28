@@ -25,7 +25,7 @@ public class Worker(
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             await RunMigrationAsync(dbContext, cancellationToken);
-            await SeedDataAsync(dbContext, cancellationToken);
+            // await SeedDataAsync(dbContext, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -46,37 +46,37 @@ public class Worker(
         });
     }
 
-    private static async Task SeedDataAsync(
-        AppDbContext dbContext, CancellationToken cancellationToken)
-    {
-        var strategy = dbContext.Database.CreateExecutionStrategy();
-        await strategy.ExecuteAsync(async () =>
-        {
-            await using var transaction = await dbContext.Database
-                .BeginTransactionAsync(cancellationToken);
-            
-            await dbContext.Roles.AddAsync(new AppRole()
-            {
-                Id = Guid.NewGuid(), Name = "Admin", NormalizedName = "ADMIN", ConcurrencyStamp = Guid.NewGuid().ToString(),
-            }, cancellationToken);
-
-            await dbContext.Roles.AddAsync(new AppRole()
-            {
-                Id = Guid.NewGuid(), Name = "Guest", NormalizedName = "GUEST", ConcurrencyStamp = Guid.NewGuid().ToString(),
-            }, cancellationToken);
-
-            await dbContext.Roles.AddAsync(new AppRole() 
-            { 
-                Id = Guid.NewGuid(), Name = "Employee", NormalizedName = "EMPLOYEE", ConcurrencyStamp = Guid.NewGuid().ToString(),
-            }, cancellationToken);
-
-            await dbContext.Roles.AddAsync(new AppRole()
-            {
-                Id = Guid.NewGuid(), Name = "Owner", NormalizedName = "OWNER", ConcurrencyStamp = Guid.NewGuid().ToString(),
-            }, cancellationToken);
-            
-            await dbContext.SaveChangesAsync(cancellationToken);
-            await transaction.CommitAsync(cancellationToken);
-        });
-    }
+    // private static async Task SeedDataAsync(
+    //     AppDbContext dbContext, CancellationToken cancellationToken)
+    // {
+    //     var strategy = dbContext.Database.CreateExecutionStrategy();
+    //     await strategy.ExecuteAsync(async () =>
+    //     {
+    //         await using var transaction = await dbContext.Database
+    //             .BeginTransactionAsync(cancellationToken);
+    //         
+    //         dbContext.Roles.Add(new AppRole()
+    //         {
+    //             Id = Guid.NewGuid(), Name = "Admin", NormalizedName = "ADMIN", ConcurrencyStamp = Guid.NewGuid().ToString(),
+    //         });
+    //
+    //         dbContext.Roles.Add(new AppRole()
+    //         {
+    //             Id = Guid.NewGuid(), Name = "Guest", NormalizedName = "GUEST", ConcurrencyStamp = Guid.NewGuid().ToString(),
+    //         });
+    //
+    //         dbContext.Roles.Add(new AppRole() 
+    //         { 
+    //             Id = Guid.NewGuid(), Name = "Employee", NormalizedName = "EMPLOYEE", ConcurrencyStamp = Guid.NewGuid().ToString(),
+    //         });
+    //
+    //         dbContext.Roles.Add(new AppRole()
+    //         {
+    //             Id = Guid.NewGuid(), Name = "Owner", NormalizedName = "OWNER", ConcurrencyStamp = Guid.NewGuid().ToString(),
+    //         });
+    //         
+    //         await dbContext.SaveChangesAsync(cancellationToken);
+    //         await transaction.CommitAsync(cancellationToken);
+    //     });
+    // }
 }

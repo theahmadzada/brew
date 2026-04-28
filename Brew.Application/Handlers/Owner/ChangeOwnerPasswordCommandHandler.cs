@@ -1,4 +1,4 @@
-using Brew.Application.Commands;
+using Brew.Application.Commands.Owner;
 using Brew.Domain.Entities;
 
 using ErrorOr;
@@ -7,7 +7,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Identity;
 
-namespace Brew.Application.Handlers;
+namespace Brew.Application.Handlers.Owner;
 
 public class ChangeOwnerPasswordCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<ChangeOwnerPasswordCommand, ErrorOr<Guid>>
 {
