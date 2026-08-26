@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("brew-db")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("rms-db")));
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
 builder.Services.ConfigureIdentity();

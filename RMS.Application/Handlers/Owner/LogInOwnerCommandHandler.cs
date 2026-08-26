@@ -41,7 +41,7 @@ public class LogInOwnerCommandHandler(
         }
 
         var resetAccessFailedCount = await userManager.ResetAccessFailedCountAsync(user);
-        if (resetAccessFailedCount.Succeeded)
+        if (!resetAccessFailedCount.Succeeded)
             return resetAccessFailedCount.Errors
                 .Select(x => Error.Unexpected(x.Code, x.Description))
                 .ToList();
