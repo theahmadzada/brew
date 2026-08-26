@@ -10,7 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\RMS.MigrationService\RMS.MigrationService.csproj" />
-      <ProjectReference Include="..\Brew.WebApi\Brew.WebApi.csproj" />
+      <ProjectReference Include="..\RMS.WebApi\RMS.WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -8,7 +8,7 @@ var migrations = builder.AddProject<Projects.RMS_MigrationService>("migrations")
     .WithReference(psql)
     .WaitFor(psql);
 
-builder.AddProject<Projects.Brew_WebApi>("webapi")
+builder.AddProject<Projects.RMS_WebApi>("webapi")
     .WithReference(psql)
     .WaitFor(psql)
     .WithReference(migrations)
