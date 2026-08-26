@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>b50530f9-cb5c-42aa-88ce-ed6369055486</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.2.4" />
+        <PackageReference Include="FluentValidation" Version="12.1.1" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+        <PackageReference Include="MediatR" Version="14.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.JsonPatch.SystemTextJson" Version="10.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Scalar.AspNetCore" Version="2.14.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RMS.Application\RMS.Application.csproj" />
+      <ProjectReference Include="..\RMS.Domain\RMS.Domain.csproj" />
+      <ProjectReference Include="..\RMS.Infrastructure\RMS.Infrastructure.csproj" />
+      <ProjectReference Include="..\RMS.ServiceDefaults\RMS.ServiceDefaults.csproj" />
+    </ItemGroup>
+
+</Project>
