@@ -8,5 +8,5 @@ namespace RMS.Application.Queries.Chain;
 
 public record GetAllOwnerChainsQuery : IRequest<ErrorOr<List<ChainDto>>>
 {
-    public Guid OwnerId { get; init; }
+    public Guid AppUserId { get; init; }
 }

@@ -8,14 +8,14 @@ namespace RMS.Application.Commands.Owner;
 
 public record DeleteOwnerCommand : IRequest<ErrorOr<Guid>>
 {
-    public Guid Id { get; set; }
+    public Guid AppUserId { get; set; }
 }
 
 public class DeleteOwnerCommandValidator : AbstractValidator<DeleteOwnerCommand>
 {
     public DeleteOwnerCommandValidator()
     {
-        RuleFor(x => x.Id)
+        RuleFor(x => x.AppUserId)
             .NotEmpty().WithMessage("The id cannot be empty");
     }
 }

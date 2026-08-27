@@ -40,7 +40,7 @@ public static class OwnerEndpoints
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var command = new UpdateOwnerCommand { Id = dto.Id, Document = dto.Document };
+            var command = new UpdateOwnerCommand { AppUserId = dto.Id, Document = dto.Document };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).RequireAuthorization(policy => policy.RequireRole(UserRole.Owner));
@@ -51,13 +51,13 @@ public static class OwnerEndpoints
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var id = user.GetUserId();
+            var id = user.GetAppUserId();
             if (id is null)
                 return Results.Unauthorized();
 
             var command = new ChangeOwnerPasswordCommand()
             {
-                Id = id.Value, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
+                AppUserId = id.Value, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
             };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
@@ -68,7 +68,7 @@ public static class OwnerEndpoints
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var command = new DeleteOwnerCommand { Id = id };
+            var command = new DeleteOwnerCommand { AppUserId = id };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).RequireAuthorization(policy =>

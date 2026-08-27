@@ -10,7 +10,7 @@ namespace RMS.Application.Commands.Chain;
 
 public record CreateChainCommand : IRequest<ErrorOr<ChainDto>>
 {
-    public Guid UserId { get; init; }
+    public Guid AppUserId { get; init; }
     public required string Name { get; init; }
 }
 
@@ -18,7 +18,7 @@ public class CreateChainCommandValidator : AbstractValidator<CreateChainCommand>
 {
     public CreateChainCommandValidator()
     {
-        RuleFor(x => x.UserId)
+        RuleFor(x => x.AppUserId)
             .NotEmpty().WithMessage("Id is required");
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required")

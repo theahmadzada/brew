@@ -15,7 +15,11 @@ public class GetAllOwnerChainsQueryHandler(AppDbContext dbContext) : IRequestHan
 {
     public async Task<ErrorOr<List<ChainDto>>> Handle(GetAllOwnerChainsQuery request, CancellationToken cancellationToken)
     {
-        var chains = await dbContext.Chains.Where(x => x.Owner.Id == request.OwnerId)
+        var ownerExists = await dbContext.Owners.AnyAsync(x => x.AppUserId == request.AppUserId, cancellationToken);
+        if (!ownerExists) return Error.NotFound("Owner.NotFound", "Owner not found");
+        
+        var chains = await dbContext.Chains
+            .Where(x => x.Owner.AppUserId == request.AppUserId)
             .Select(x => new ChainDto() { Id = x.Id, Name = x.Name })
             .ToListAsync(cancellationToken);
 

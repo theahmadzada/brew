@@ -16,7 +16,7 @@ public class CreateChainCommandHandler(AppDbContext dbContext) : IRequestHandler
     public async Task<ErrorOr<ChainDto>> Handle(CreateChainCommand request, CancellationToken cancellationToken)
     {
         var ownerId = await dbContext.Owners
-            .Where(x => x.AppUserId == request.UserId)
+            .Where(x => x.AppUserId == request.AppUserId)
             .Select(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken);
         if(ownerId == Guid.Empty)
@@ -26,6 +26,6 @@ public class CreateChainCommandHandler(AppDbContext dbContext) : IRequestHandler
         dbContext.Chains.Add(chain);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return new ChainDto() { Id = chain.Id, Name = chain.Name, };
+        return new ChainDto() { Id = chain.Id, Name = chain.Name };
     }
 }

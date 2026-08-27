@@ -8,7 +8,7 @@ namespace RMS.Application.Commands.Owner;
 
 public record ChangeOwnerPasswordCommand : IRequest<ErrorOr<Guid>>
 {
-    public Guid Id { get; set; }
+    public Guid AppUserId { get; set; }
     public required string OldPassword { get; init; }
     public required string NewPassword { get; init; }
 }
@@ -17,7 +17,7 @@ public class ChangeOwnerPasswordCommandValidator : AbstractValidator<ChangeOwner
 {
     public ChangeOwnerPasswordCommandValidator()
     {
-        RuleFor(x => x.Id)
+        RuleFor(x => x.AppUserId)
             .NotNull().WithMessage("Id cannot be null");
         RuleFor(x => x.OldPassword)
             .NotNull().WithMessage("Old password cannot be null");

@@ -14,7 +14,7 @@ public class DeleteOwnerCommandHandler(UserManager<AppUser> userManager) : IRequ
 {
     public async Task<ErrorOr<Guid>> Handle(DeleteOwnerCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByIdAsync(request.Id.ToString());
+        var user = await userManager.FindByIdAsync(request.AppUserId.ToString());
         if (user is null) 
             return Error.NotFound("User.NotFound", "User not found");
 

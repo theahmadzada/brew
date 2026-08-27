@@ -15,7 +15,7 @@ public class UpdateOwnerCommandHandler(UserManager<AppUser> userManager) : IRequ
 {
     public async Task<ErrorOr<UpdatedOwnerDto>> Handle(UpdateOwnerCommand request, CancellationToken cancellationToken)
     {
-        var owner = await userManager.FindByIdAsync(request.Id.ToString());
+        var owner = await userManager.FindByIdAsync(request.AppUserId.ToString());
         if (owner is null) return Error.NotFound("User.NotFound", "User not found");
 
         var dto = new PatchOwnerDto()

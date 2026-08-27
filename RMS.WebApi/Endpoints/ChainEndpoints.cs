@@ -24,11 +24,11 @@ public static class ChainEndpoints
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var id = user.GetUserId();
+            var id = user.GetAppUserId();
             if (id is null)
                 return Results.Unauthorized();
 
-            var command = new CreateChainCommand() { Name = dto.Name, UserId = id.Value };
+            var command = new CreateChainCommand() { Name = dto.Name, AppUserId = id.Value };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));
@@ -39,7 +39,7 @@ public static class ChainEndpoints
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var ownerId = user.GetUserId();
+            var ownerId = user.GetAppUserId();
             if (ownerId is null)
                 return Results.Unauthorized();
 
@@ -53,11 +53,11 @@ public static class ChainEndpoints
             IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var ownerId = user.GetUserId();
+            var ownerId = user.GetAppUserId();
             if (ownerId is null)
                 return Results.Unauthorized();
 
-            var query = new GetAllOwnerChainsQuery() { OwnerId = ownerId.Value };
+            var query = new GetAllOwnerChainsQuery() { AppUserId = ownerId.Value };
             var result = await mediator.Send(query, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));

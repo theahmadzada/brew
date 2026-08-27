@@ -14,7 +14,7 @@ public class ChangeOwnerPasswordCommandHandler(UserManager<AppUser> userManager)
 {
     public async Task<ErrorOr<Guid>> Handle(ChangeOwnerPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByIdAsync(request.Id.ToString());
+        var user = await userManager.FindByIdAsync(request.AppUserId.ToString());
         if (user is null) return Error.NotFound("User.NotFound", "User not found");
 
         var result = await userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
