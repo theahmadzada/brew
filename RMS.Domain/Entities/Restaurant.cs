@@ -8,7 +8,11 @@ public class Restaurant
     public List<Category> Categories { get; set; } = [];
     //public List<Table> Tables { get; set; } = [];
     //public List<Employee> Employees { get; set; } = [];
-    public Guid ChainId { get; set; }
-    public Chain Chain { get; set; } = null!;
+    
+    public Guid OwnerId { get; set; }
+    public Owner Owner { get; set; } = null!;
+    
+    public Guid? ChainId { get; set; }
+    public Chain? Chain { get; set; }
     public long? TelegramChatId { get; set; }
 }

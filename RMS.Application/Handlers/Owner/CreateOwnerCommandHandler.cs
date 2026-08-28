@@ -30,7 +30,7 @@ public class CreateOwnerCommandHandler(
             UserName = request.Email,
             PhoneNumber = request.PhoneNumber,
         };
-        var password = Guid.NewGuid().ToString("").Substring(0, 8);
+        var password = "Temp!" + Guid.NewGuid().ToString("").Substring(0, 8);
 
         await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
         try

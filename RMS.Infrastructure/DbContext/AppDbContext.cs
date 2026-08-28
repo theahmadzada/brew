@@ -20,5 +20,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     {
         base.OnModelCreating(builder);
         builder.Entity<AppUser>().HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<Owner>().HasQueryFilter(x => !x.AppUser.IsDeleted);
+        builder.Entity<Chain>().HasQueryFilter(x => !x.Owner.AppUser.IsDeleted);
+        builder.Entity<Employee>().HasQueryFilter(x => !x.AppUser.IsDeleted);
     }
 }

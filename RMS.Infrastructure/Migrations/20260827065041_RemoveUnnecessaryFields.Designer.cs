@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RMS.Infrastructure.DbContext;
@@ -11,9 +12,11 @@ using RMS.Infrastructure.DbContext;
 namespace RMS.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260827065041_RemoveUnnecessaryFields")]
+    partial class RemoveUnnecessaryFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -424,15 +427,12 @@ namespace RMS.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ChainId")
+                    b.Property<Guid>("ChainId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -444,8 +444,6 @@ namespace RMS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChainId");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Restaurants");
                 });
@@ -626,17 +624,11 @@ namespace RMS.Infrastructure.Migrations
                 {
                     b.HasOne("RMS.Domain.Entities.Chain", "Chain")
                         .WithMany("Restaurants")
-                        .HasForeignKey("ChainId");
-
-                    b.HasOne("RMS.Domain.Entities.Owner", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("ChainId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Chain");
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("RMS.Domain.Entities.Table", b =>

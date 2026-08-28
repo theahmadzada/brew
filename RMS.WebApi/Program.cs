@@ -42,5 +42,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapOwnerEndpoints()
+    .MapRestaurantEndpoints()
     .MapChainEndpoints();
 app.Run();

@@ -13,6 +13,8 @@ using RMS.Domain.Entities;
 using RMS.Infrastructure.DbContext;
 using RMS.Shared.Settings;
 
+using Slugify;
+
 using AssemblyReference = RMS.Application.AssemblyReference;
 
 namespace RMS.WebApi;
@@ -91,6 +93,7 @@ public static class Configuration
     public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddSingleton<ITokenService, TokenService>();
+        services.AddSingleton<ISlugHelper, SlugHelper>();
         return services;
     }
 }

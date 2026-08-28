@@ -55,6 +55,8 @@ public class Worker(
         {
             await using var transaction = await dbContext.Database
                 .BeginTransactionAsync(cancellationToken);
+
+            if (dbContext.Roles.Any()) return;
             
             dbContext.Roles.Add(new AppRole()
             {
