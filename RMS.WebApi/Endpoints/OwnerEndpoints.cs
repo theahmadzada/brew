@@ -35,6 +35,15 @@ public static class OwnerEndpoints
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
 
+        group.MapPost("/otp", async (
+            GenerateTelegramOtpCommand request,
+            ISender mediator,
+            CancellationToken cancellationToken) =>
+        {
+            var result = await mediator.Send(request, cancellationToken);
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
+        });
+        
         group.MapPatch("/{id}", async (
             UpdateOwnerDto dto,
             ISender mediator,

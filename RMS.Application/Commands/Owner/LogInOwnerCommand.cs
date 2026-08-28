@@ -10,8 +10,8 @@ namespace RMS.Application.Commands.Owner;
 
 public record LogInOwnerCommand : IRequest<ErrorOr<AuthDto>>
 {
-    public required string Email { get; set; }
-    public required string Password { get; set; }
+    public required string Email { get; init; }
+    public required string Password { get; init; }
 }
 
 public class LogInOwnerCommandValidator : AbstractValidator<LogInOwnerCommand>

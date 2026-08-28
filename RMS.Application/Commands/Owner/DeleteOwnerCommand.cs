@@ -8,7 +8,7 @@ namespace RMS.Application.Commands.Owner;
 
 public record DeleteOwnerCommand : IRequest<ErrorOr<Guid>>
 {
-    public Guid AppUserId { get; set; }
+    public Guid AppUserId { get; init; }
 }
 
 public class DeleteOwnerCommandValidator : AbstractValidator<DeleteOwnerCommand>

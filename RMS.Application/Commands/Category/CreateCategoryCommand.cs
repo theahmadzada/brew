@@ -10,9 +10,9 @@ namespace RMS.Application.Commands.Category;
 
 public record CreateCategoryCommand() : IRequest<ErrorOr<CategoryDto>>
 {
-    public Guid RestaurantId { get; set; }
-    public required string Name { get; set; }
-    public int Order { get; set; }
+    public Guid RestaurantId { get; init; }
+    public required string Name { get; init; }
+    public int Order { get; init; }
 }
 
 public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCommand>

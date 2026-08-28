@@ -15,6 +15,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.AddRedisDistributedCache("redis");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("rms-db")));
 builder.Services.AddOpenApi();

@@ -1,0 +1,40 @@
+using ErrorOr;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
+
+using RMS.Application.Commands.Owner;
+using RMS.Application.Dto;
+using RMS.Domain.Entities;
+
+namespace RMS.Application.Handlers.Owner;
+
+public class GenerateTelegramOtpCommandHandler(
+    IDistributedCache cache,
+    UserManager<AppUser> userManager) : IRequestHandler<GenerateTelegramOtpCommand, ErrorOr<OtpDto>>
+{
+    public async Task<ErrorOr<OtpDto>> Handle(GenerateTelegramOtpCommand request, CancellationToken cancellationToken)
+    {
+        var user = await userManager.FindByIdAsync(request.AppUserId.ToString());
+        if (user is null)
+            return Error.NotFound("User.NotFound", "Target user was not found.");
+
+        var otpCode = Random.Shared.Next(100000, 999999).ToString();
+        var cacheKey = $"tg_otp:{otpCode}";
+        var options = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+        };
+
+        await cache.SetStringAsync(cacheKey, request.AppUserId.ToString(), options, cancellationToken);
+
+        return new OtpDto()
+        {
+            ExpiresInMinutes = 5,
+            Otp = otpCode,
+            AppUserId = request.AppUserId
+        };
+    }
+}

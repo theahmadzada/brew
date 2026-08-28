@@ -10,10 +10,10 @@ namespace RMS.Application.Commands.Owner;
 
 public record CreateOwnerCommand : IRequest<ErrorOr<OwnerDto>>
 {
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public required string Email { get; set; }
-    public required string PhoneNumber { get; set; }
+    public required string FirstName { get; init; }
+    public required string LastName { get; init; }
+    public required string Email { get; init; }
+    public required string PhoneNumber { get; init; }
 }
 
 public class CreateOwnerCommandValidator : AbstractValidator<CreateOwnerCommand>

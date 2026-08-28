@@ -1,0 +1,39 @@
+using ErrorOr;
+
+using FluentValidation;
+
+using MediatR;
+
+using RMS.Application.Dto;
+
+namespace RMS.Application.Commands.MenuItem;
+
+public record CreateMenuItemCommand() : IRequest<ErrorOr<MenuItemDto>>
+{
+    public required string Title { get; init; }
+    public string? Description { get; init; }
+    public decimal Price { get; init; }
+    public int Order { get; init; }
+    public Stream? Image { get; init; }
+}
+
+public class CreateMenuItemCommandValidator : AbstractValidator<CreateMenuItemCommand>
+{
+    public CreateMenuItemCommandValidator()
+    {
+        RuleFor(x => x.Title)
+            .NotEmpty()
+            .WithMessage("Title is required")
+            .MaximumLength(50)
+            .WithMessage("Title cannot exceed 50 characters");
+        RuleFor(x => x.Description)
+            .MaximumLength(250)
+            .WithMessage("Description cannot exceed 250 characters");
+        RuleFor(x => x.Price)
+            .GreaterThan(0)
+            .WithMessage("Price must be greater than 0");
+        RuleFor(x => x.Price)
+            .NotEmpty()
+            .WithMessage("Price is required");
+    }
+}
