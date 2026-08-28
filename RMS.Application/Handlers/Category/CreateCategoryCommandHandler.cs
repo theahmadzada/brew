@@ -2,15 +2,30 @@ using ErrorOr;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+
 using RMS.Application.Commands.Category;
 using RMS.Application.Dto;
+using RMS.Infrastructure.DbContext;
 
 namespace RMS.Application.Handlers.Category;
 
-public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, ErrorOr<CategoryDto>>
+public class CreateCategoryCommandHandler(AppDbContext dbContext) : IRequestHandler<CreateCategoryCommand, ErrorOr<CategoryDto>>
 {
-    public Task<ErrorOr<CategoryDto>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<CategoryDto>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var restaurantId = await dbContext.Restaurants
+            .Where(x => x.Id == request.RestaurantId)
+            .Select(restaurant => restaurant.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        if (restaurantId == Guid.Empty)
+            return Error.NotFound("Restaurant.NotFound", "Restaurant not found");
+        
+        var category = new Domain.Entities.Category() { Name = request.Name, RestaurantId = restaurantId, Order = request.Order };
+        dbContext.Categories.Add(category);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return new CategoryDto() { Id = category.Id, Name = category.Name, Order = category.Order };
     }
 }

@@ -23,4 +23,8 @@
       <ProjectReference Include="..\RMS.Shared\RMS.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Commands\MenuItem\" />
+    </ItemGroup>
+
 </Project>
