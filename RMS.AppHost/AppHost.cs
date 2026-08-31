@@ -8,14 +8,14 @@ var redis = builder.AddRedis("redis");
 
 var migrations = builder.AddProject<Projects.RMS_MigrationService>("migrations")
     .WithReference(psql)
-    .WaitFor(psql)
-    .WithReference(redis)
-    .WaitFor(redis);
+    .WaitFor(psql);
 
 builder.AddProject<Projects.RMS_WebApi>("webapi")
     .WithReference(psql)
     .WaitFor(psql)
     .WithReference(migrations)
-    .WaitForCompletion(migrations);
+    .WaitForCompletion(migrations)
+    .WithReference(redis)
+    .WaitFor(redis);
 
 builder.Build().Run();
