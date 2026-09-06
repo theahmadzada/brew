@@ -11,6 +11,8 @@ using RMS.Application.ServiceContracts;
 using RMS.Application.Services;
 using RMS.Domain.Entities;
 using RMS.Infrastructure.DbContext;
+using RMS.Infrastructure.ServiceContracts;
+using RMS.Infrastructure.Services;
 using RMS.Shared.Settings;
 
 using Slugify;
@@ -94,6 +96,7 @@ public static class Configuration
     {
         services.AddSingleton<ITokenService, TokenService>();
         services.AddSingleton<ISlugHelper, SlugHelper>();
+        services.AddScoped<IFileStorageService, FileStorageService>();
         return services;
     }
 }

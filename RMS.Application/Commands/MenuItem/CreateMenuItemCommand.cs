@@ -11,10 +11,12 @@ namespace RMS.Application.Commands.MenuItem;
 public record CreateMenuItemCommand() : IRequest<ErrorOr<MenuItemDto>>
 {
     public required string Title { get; init; }
-    public string? Description { get; init; }
+    public required string Description { get; init; }
+    public Guid CategoryId { get; init; }
+    public Stream? Image { get; init; }
+    public string? ContentType { get; init; }
     public decimal Price { get; init; }
     public int Order { get; init; }
-    public Stream? Image { get; init; }
 }
 
 public class CreateMenuItemCommandValidator : AbstractValidator<CreateMenuItemCommand>
@@ -31,8 +33,7 @@ public class CreateMenuItemCommandValidator : AbstractValidator<CreateMenuItemCo
             .WithMessage("Description cannot exceed 250 characters");
         RuleFor(x => x.Price)
             .GreaterThan(0)
-            .WithMessage("Price must be greater than 0");
-        RuleFor(x => x.Price)
+            .WithMessage("Price must be greater than 0")
             .NotEmpty()
             .WithMessage("Price is required");
     }

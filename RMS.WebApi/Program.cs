@@ -15,6 +15,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.AddMinioClient("minio");
 builder.AddRedisDistributedCache("redis");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("rms-db")));
@@ -44,5 +45,7 @@ app.UseAuthorization();
 
 app.MapOwnerEndpoints()
     .MapRestaurantEndpoints()
-    .MapChainEndpoints();
+    .MapChainEndpoints()
+    .MapCategoryEndpoints()
+    .MapMenuItemEndpoints();
 app.Run();

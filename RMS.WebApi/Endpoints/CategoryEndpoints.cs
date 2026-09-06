@@ -9,9 +9,9 @@ public static class CategoryEndpoints
 {
     public static WebApplication MapCategoryEndpoints(this WebApplication app)
     {
-        app.MapGroup("api/category");
+        var group = app.MapGroup("api/category");
 
-        app.MapPost("/", async (
+        group.MapPost("/", async (
             ISender mediatr,
             CreateCategoryCommand command,
             CancellationToken cancellationToken
