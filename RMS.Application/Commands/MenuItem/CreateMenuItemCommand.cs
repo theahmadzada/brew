@@ -10,13 +10,14 @@ namespace RMS.Application.Commands.MenuItem;
 
 public record CreateMenuItemCommand() : IRequest<ErrorOr<MenuItemDto>>
 {
+    public Guid AppUserId { get; init; }
     public required string Title { get; init; }
     public required string Description { get; init; }
     public Guid CategoryId { get; init; }
     public Stream? Image { get; init; }
     public string? ContentType { get; init; }
     public decimal Price { get; init; }
-    public int Order { get; init; }
+    public int? Order { get; init; }
 }
 
 public class CreateMenuItemCommandValidator : AbstractValidator<CreateMenuItemCommand>

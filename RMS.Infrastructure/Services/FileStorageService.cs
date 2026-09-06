@@ -50,7 +50,7 @@ public class FileStorageService(IMinioClient minioClient, IConfiguration configu
         return $"{_publicEndpoint}/{_bucketName}/{objectName}";
     }
 
-    public async Task DeleteFileAsync(string fileUrl, CancellationToken ct = default)
+    public async Task DeleteAsync(string fileUrl, CancellationToken ct = default)
     {
         var objectName = fileUrl.Split('/').Last();
 

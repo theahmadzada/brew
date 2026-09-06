@@ -10,5 +10,6 @@ public class MenuItem
     public string? ImageUrl { get; set; }
     public decimal Price { get; set; }
     public bool IsDeleted { get; set; }
+    public bool IsAvailable { get; set; } = true;
     public int Order { get; set; }
 }

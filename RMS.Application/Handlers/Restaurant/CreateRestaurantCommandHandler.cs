@@ -34,7 +34,7 @@ public class CreateRestaurantCommandHandler(
 
         if (request.ChainId.HasValue)
         {
-            var chainExists = await dbContext.Chains.AnyAsync(x => x.Id == request.ChainId.Value &&
+            var chainExists = await dbContext.Chains.AnyAsync(x => x.Id == request.ChainId &&
                 x.OwnerId == ownerId, cancellationToken);
             
             if (!chainExists) return Error.NotFound("Chain.NotFound", "Chain not found");

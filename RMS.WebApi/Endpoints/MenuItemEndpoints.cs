@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +18,17 @@ public static class MenuItemEndpoints
 
         group.MapPost("/", async (
             [FromForm] CreateMenuItemDto dto,
+            ClaimsPrincipal user,
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
+            var id = user.GetAppUserId();
+            if (id is null)
+                return Results.Unauthorized();
+            
             var request = new CreateMenuItemCommand
             {
+                AppUserId = id.Value,
                 Title = dto.Title,
                 Description = dto.Description,
                 CategoryId = dto.CategoryId,
@@ -32,6 +40,20 @@ public static class MenuItemEndpoints
             var result = await mediator.Send(request, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).DisableAntiforgery();
+
+        group.MapPatch("/id", async (
+            Guid id,
+            [FromBody] ToggleMenuItemAvailabilityDto request,
+            ISender mediator,
+            CancellationToken cancellationToken) =>
+        {
+            var command = new ToggleMenuItemAvailabilityCommand()
+            {
+                MenuItemId = id, IsAvailable = request.IsAvailable
+            };
+            var result = await mediator.Send(command, cancellationToken);
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
+        });
         
         return app;
     }

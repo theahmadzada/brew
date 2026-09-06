@@ -9,5 +9,5 @@ public record CreateMenuItemDto()
     public Guid CategoryId { get; init; }
     public IFormFile? Image { get; init; }
     public decimal Price { get; init; }
-    public int Order { get; init; }
+    public int? Order { get; init; }
 };

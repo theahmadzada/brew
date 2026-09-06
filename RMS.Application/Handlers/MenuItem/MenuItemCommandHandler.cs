@@ -2,6 +2,8 @@ using ErrorOr;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+
 using RMS.Application.Commands.MenuItem;
 using RMS.Application.Dto;
 using RMS.Infrastructure.DbContext;
@@ -17,21 +19,33 @@ public class MenuItemCommandHandler(
     {
         string? imageUrl = null;
         if (request.Image is not null && request.ContentType is not null)
-            imageUrl = await storage.UploadAsync(request.Image, request.ContentType, cancellationToken);
-
+            imageUrl = await storage.UploadAsync(request.Image, request.ContentType, cancellationToken);        
+        
         var menuItem = new RMS.Domain.Entities.MenuItem
         {
             Title = request.Title,
             Description = request.Description,
             CategoryId = request.CategoryId,
             Price = request.Price,
-            Order = request.Order,
             ImageUrl = imageUrl
         };
 
+        if(request.Order is null)
+        {
+            var menuItems = await dbContext.MenuItems
+                .Where(x => x.CategoryId == request.CategoryId 
+                            && x.Category.Restaurant.Owner.AppUserId == request.AppUserId)
+                .CountAsync(cancellationToken);
+            menuItem.Order = menuItems;
+        }
+        else
+        { 
+            menuItem.Order = request.Order.Value;
+        }
+        
         dbContext.MenuItems.Add(menuItem);
         await dbContext.SaveChangesAsync(cancellationToken);
-
+            
         return new MenuItemDto
         {
             Id = menuItem.Id,
