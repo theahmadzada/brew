@@ -7,13 +7,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 using RMS.Application.Commands.Owner;
 using RMS.Application.Dto;
-using RMS.Domain.Entities;
 
 namespace RMS.Application.Handlers.Owner;
 
 public class GenerateTelegramOtpCommandHandler(
     IDistributedCache cache,
-    UserManager<AppUser> userManager) : IRequestHandler<GenerateTelegramOtpCommand, ErrorOr<OtpDto>>
+    UserManager<Domain.Entities.AppUser> userManager) : IRequestHandler<GenerateTelegramOtpCommand, ErrorOr<OtpDto>>
 {
     public async Task<ErrorOr<OtpDto>> Handle(GenerateTelegramOtpCommand request, CancellationToken cancellationToken)
     {

@@ -1,5 +1,4 @@
 using RMS.Domain;
-using RMS.Domain.Entities;
 using RMS.Infrastructure.DbContext;
 
 using ErrorOr;
@@ -14,7 +13,7 @@ using RMS.Application.Dto;
 namespace RMS.Application.Handlers.Owner;
 
 public class CreateOwnerCommandHandler(
-    UserManager<AppUser> userManager,
+    UserManager<Domain.Entities.AppUser> userManager,
     AppDbContext dbContext) : IRequestHandler<CreateOwnerCommand, ErrorOr<OwnerDto>>
 {
     public async Task<ErrorOr<OwnerDto>> Handle(CreateOwnerCommand request, CancellationToken cancellationToken)
@@ -22,7 +21,7 @@ public class CreateOwnerCommandHandler(
         var appUser = await userManager.FindByEmailAsync(request.Email);
         if (appUser is not null) return Error.Validation("User.Exists", "User already exists");
        
-        var newUser = new AppUser()
+        var newUser = new Domain.Entities.AppUser()
         {
             FirstName = request.FirstName,
             LastName = request.LastName,

@@ -1,5 +1,3 @@
-using RMS.Domain.Entities;
-
 using ErrorOr;
 
 using MediatR;
@@ -10,7 +8,7 @@ using RMS.Application.Commands.Owner;
 
 namespace RMS.Application.Handlers.Owner;
 
-public class ChangeOwnerPasswordCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<ChangeOwnerPasswordCommand, ErrorOr<Guid>>
+public class ChangeOwnerPasswordCommandHandler(UserManager<Domain.Entities.AppUser> userManager) : IRequestHandler<ChangeOwnerPasswordCommand, ErrorOr<Guid>>
 {
     public async Task<ErrorOr<Guid>> Handle(ChangeOwnerPasswordCommand request, CancellationToken cancellationToken)
     {

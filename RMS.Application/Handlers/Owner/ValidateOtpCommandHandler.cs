@@ -6,13 +6,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 
 using RMS.Application.Commands.Owner;
-using RMS.Domain.Entities;
 
 namespace RMS.Application.Handlers.Owner;
 
 public class ValidateOtpCommandHandler(
     IDistributedCache cache,
-    UserManager<AppUser> userManager) : IRequestHandler<ValidateOtpCommand, ErrorOr<bool>>
+    UserManager<Domain.Entities.AppUser> userManager) : IRequestHandler<ValidateOtpCommand, ErrorOr<bool>>
 {
     public async Task<ErrorOr<bool>> Handle(ValidateOtpCommand request, CancellationToken cancellationToken)
     {

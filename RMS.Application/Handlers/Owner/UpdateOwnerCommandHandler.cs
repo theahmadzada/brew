@@ -1,5 +1,3 @@
-using RMS.Domain.Entities;
-
 using ErrorOr;
 
 using MediatR;
@@ -11,7 +9,7 @@ using RMS.Application.Dto;
 
 namespace RMS.Application.Handlers.Owner;
 
-public class UpdateOwnerCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<UpdateOwnerCommand, ErrorOr<UpdatedOwnerDto>>
+public class UpdateOwnerCommandHandler(UserManager<Domain.Entities.AppUser> userManager) : IRequestHandler<UpdateOwnerCommand, ErrorOr<UpdatedOwnerDto>>
 {
     public async Task<ErrorOr<UpdatedOwnerDto>> Handle(UpdateOwnerCommand request, CancellationToken cancellationToken)
     {

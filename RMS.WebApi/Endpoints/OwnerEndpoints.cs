@@ -4,6 +4,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
 
+using RMS.Application.Commands.AppUser;
 using RMS.Application.Commands.Owner;
 using RMS.Application.Dto;
 using RMS.Domain;
@@ -26,14 +27,7 @@ public static class OwnerEndpoints
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
 
-        group.MapPost("/login", async (
-            LogInOwnerCommand command,
-            ISender mediator,
-            CancellationToken cancellationToken) =>
-        {
-            var result = await mediator.Send(command, cancellationToken);
-            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        });
+        
 
         group.MapPost("/otp", async (
             GenerateTelegramOtpCommand request,

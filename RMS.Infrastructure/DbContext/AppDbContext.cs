@@ -23,6 +23,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         builder.Entity<Owner>().HasQueryFilter(x => !x.AppUser.IsDeleted);
         builder.Entity<Chain>().HasQueryFilter(x => !x.Owner.AppUser.IsDeleted);
         builder.Entity<Employee>().HasQueryFilter(x => !x.AppUser.IsDeleted);
+        builder.Entity<MenuItem>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<MenuItem>().HasQueryFilter(x => !x.IsAvailable);
     }
 }

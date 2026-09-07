@@ -1,5 +1,3 @@
-using RMS.Domain.Entities;
-
 using ErrorOr;
 
 using MediatR;
@@ -10,7 +8,7 @@ using RMS.Application.Commands.Owner;
 
 namespace RMS.Application.Handlers.Owner;
 
-public class DeleteOwnerCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<DeleteOwnerCommand, ErrorOr<Guid>>
+public class DeleteOwnerCommandHandler(UserManager<Domain.Entities.AppUser> userManager) : IRequestHandler<DeleteOwnerCommand, ErrorOr<Guid>>
 {
     public async Task<ErrorOr<Guid>> Handle(DeleteOwnerCommand request, CancellationToken cancellationToken)
     {

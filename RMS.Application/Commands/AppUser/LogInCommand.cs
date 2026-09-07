@@ -6,15 +6,15 @@ using MediatR;
 
 using RMS.Application.Dto;
 
-namespace RMS.Application.Commands.Owner;
+namespace RMS.Application.Commands.AppUser;
 
-public record LogInOwnerCommand : IRequest<ErrorOr<AuthDto>>
+public record LogInCommand : IRequest<ErrorOr<AuthDto>>
 {
     public required string Email { get; init; }
     public required string Password { get; init; }
 }
 
-public class LogInOwnerCommandValidator : AbstractValidator<LogInOwnerCommand>
+public class LogInOwnerCommandValidator : AbstractValidator<LogInCommand>
 {
     public LogInOwnerCommandValidator()
     {

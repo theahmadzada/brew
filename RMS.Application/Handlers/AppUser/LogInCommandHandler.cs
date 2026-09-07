@@ -1,24 +1,22 @@
 using System.Security.Claims;
 
-using RMS.Domain.Entities;
-
 using ErrorOr;
 
 using MediatR;
 
 using Microsoft.AspNetCore.Identity;
 
-using RMS.Application.Commands.Owner;
+using RMS.Application.Commands.AppUser;
 using RMS.Application.Dto;
 using RMS.Application.ServiceContracts;
 
-namespace RMS.Application.Handlers.Owner;
+namespace RMS.Application.Handlers.AppUser;
 
-public class LogInOwnerCommandHandler(
-    UserManager<AppUser> userManager,
-    ITokenService tokenService) : IRequestHandler<LogInOwnerCommand, ErrorOr<AuthDto>>
+public class LogInCommandHandler(
+    UserManager<Domain.Entities.AppUser> userManager,
+    ITokenService tokenService) : IRequestHandler<LogInCommand, ErrorOr<AuthDto>>
 {
-    public async Task<ErrorOr<AuthDto>> Handle(LogInOwnerCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthDto>> Handle(LogInCommand request, CancellationToken cancellationToken)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user is null)
