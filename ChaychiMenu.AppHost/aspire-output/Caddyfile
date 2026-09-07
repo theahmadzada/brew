@@ -1,0 +1,7 @@
+chaychi.org {
+    reverse_proxy webapi:8080
+}
+
+files.chaychi.org {
+    reverse_proxy minio:9000
+}

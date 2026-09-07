@@ -1,0 +1,129 @@
+services:
+  docker-compose-dashboard:
+    image: "mcr.microsoft.com/dotnet/nightly/aspire-dashboard:13.5"
+    ports:
+      - "18888"
+    expose:
+      - "18889"
+      - "18890"
+    networks:
+      - "aspire"
+    restart: "always"
+  rms:
+    image: "docker.io/library/postgres:18.3"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${RMS_PASSWORD}"
+    expose:
+      - "5432"
+    volumes:
+      - type: "volume"
+        target: "/var/lib/postgresql"
+        source: "rms.apphost-def4e36209-rms-data"
+        read_only: false
+    networks:
+      - "aspire"
+  redis:
+    image: "docker.io/library/redis:8.6"
+    command:
+      - "-c"
+      - "redis-server --requirepass $$REDIS_PASSWORD"
+    entrypoint:
+      - "/bin/sh"
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    expose:
+      - "6379"
+    networks:
+      - "aspire"
+  migrations:
+    image: "${MIGRATIONS_IMAGE}"
+    environment:
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+      ConnectionStrings__rms-db: "Host=rms;Port=5432;Username=postgres;Password=${RMS_PASSWORD};Database=rms-db"
+      RMS_DB_HOST: "rms"
+      RMS_DB_PORT: "5432"
+      RMS_DB_USERNAME: "postgres"
+      RMS_DB_PASSWORD: "${RMS_PASSWORD}"
+      RMS_DB_URI: "postgresql://postgres:${RMS_PASSWORD}@rms:5432/rms-db"
+      RMS_DB_JDBCCONNECTIONSTRING: "jdbc:postgresql://rms:5432/rms-db"
+      RMS_DB_DATABASENAME: "rms-db"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://docker-compose-dashboard:18889"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_SERVICE_NAME: "migrations"
+    depends_on:
+      rms:
+        condition: "service_started"
+    networks:
+      - "aspire"
+  minio:
+    image: "docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z"
+    command:
+      - "server"
+      - "/data"
+      - "--console-address"
+      - ":9001"
+    environment:
+      MINIO_ROOT_USER: "${USER}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOTPASSWORD}"
+    expose:
+      - "9000"
+      - "9001"
+    volumes:
+      - type: "volume"
+        target: "/data"
+        source: "rms.apphost-def4e36209-minio-data"
+        read_only: false
+    networks:
+      - "aspire"
+  webapi:
+    image: "${WEBAPI_IMAGE}"
+    environment:
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      HTTP_PORTS: "${WEBAPI_PORT}"
+      ConnectionStrings__rms-db: "Host=rms;Port=5432;Username=postgres;Password=${RMS_PASSWORD};Database=rms-db"
+      RMS_DB_HOST: "rms"
+      RMS_DB_PORT: "5432"
+      RMS_DB_USERNAME: "postgres"
+      RMS_DB_PASSWORD: "${RMS_PASSWORD}"
+      RMS_DB_URI: "postgresql://postgres:${RMS_PASSWORD}@rms:5432/rms-db"
+      RMS_DB_JDBCCONNECTIONSTRING: "jdbc:postgresql://rms:5432/rms-db"
+      RMS_DB_DATABASENAME: "rms-db"
+      ConnectionStrings__redis: "redis:6379,password=${REDIS_PASSWORD}"
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      REDIS_URI: "redis://:${REDIS_PASSWORD}@redis:6379"
+      ConnectionStrings__minio: "Endpoint=http://minio:9000;AccessKey=${USER};SecretKey=${MINIO_ROOTPASSWORD}"
+      MINIO_HOST: "minio"
+      MINIO_PORT: "9000"
+      MINIO_ACCESSKEY: "${USER}"
+      MINIO_SECRETKEY: "${MINIO_ROOTPASSWORD}"
+      MINIO_URI: "http://minio:9000"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://docker-compose-dashboard:18889"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_SERVICE_NAME: "webapi"
+    ports:
+      - "${WEBAPI_PORT}"
+    depends_on:
+      rms:
+        condition: "service_started"
+      migrations:
+        condition: "service_completed_successfully"
+      redis:
+        condition: "service_started"
+      minio:
+        condition: "service_started"
+    networks:
+      - "aspire"
+networks:
+  aspire:
+    driver: "bridge"
+volumes:
+  rms.apphost-def4e36209-rms-data:
+    driver: "local"
+  rms.apphost-def4e36209-minio-data:
+    driver: "local"

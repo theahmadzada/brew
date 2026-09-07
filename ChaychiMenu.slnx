@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="ChaychiMenu.AppHost\ChaychiMenu.AppHost.csproj" />
+  <Project Path="ChaychiMenu.Application\ChaychiMenu.Application.csproj" />
+  <Project Path="ChaychiMenu.Domain\ChaychiMenu.Domain.csproj" />
+  <Project Path="ChaychiMenu.Infrastructure\ChaychiMenu.Infrastructure.csproj" />
+  <Project Path="ChaychiMenu.MigrationService\ChaychiMenu.MigrationService.csproj" />
+  <Project Path="ChaychiMenu.ServiceDefaults\ChaychiMenu.ServiceDefaults.csproj" />
+  <Project Path="ChaychiMenu.Shared\ChaychiMenu.Shared.csproj" />
+  <Project Path="ChaychiMenu.WebApi\ChaychiMenu.WebApi.csproj" />
+</Solution>
