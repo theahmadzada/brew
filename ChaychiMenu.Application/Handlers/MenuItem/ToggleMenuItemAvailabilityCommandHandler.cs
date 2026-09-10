@@ -1,4 +1,5 @@
 using ChaychiMenu.Application.Commands.MenuItem;
+using ChaychiMenu.Domain;
 using ChaychiMenu.Infrastructure.DbContext;
 
 using ErrorOr;
@@ -14,12 +15,16 @@ public class ToggleMenuItemAvailabilityCommandHandler(
 {
     public async Task<ErrorOr<bool>> Handle(ToggleMenuItemAvailabilityCommand request, CancellationToken cancellationToken)
     {
-        var menuItem =
-            await dbContext.MenuItems.FirstOrDefaultAsync(x => x.Id == request.MenuItemId, cancellationToken);
+        var query = dbContext.MenuItems.Where(x => x.Id == request.MenuItemId);
+        
+        if(request.UserRole != UserRole.Admin)
+            query = query.Where(x => x.Category.Restaurant.Owner.AppUserId == request.AppUserId);
+        
+        var menuItem = await query.FirstOrDefaultAsync(cancellationToken);
         if (menuItem is null)
             return Error.NotFound("MenuItem.NotFound", "Menu Item not Found");
 
-        menuItem.IsAvailable = true;
+        menuItem.IsAvailable = request.IsAvailable;
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return true;
