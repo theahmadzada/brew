@@ -8,7 +8,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ChaychiMenu.Application.Handlers.Category;
+namespace ChaychiMenu.Application.Handlers.MenuItem;
 
 public class ToggleMenuItemAvailabilityCommandHandler(
     AppDbContext dbContext) : IRequestHandler<ToggleMenuItemAvailabilityCommand, ErrorOr<bool>>
@@ -16,7 +16,6 @@ public class ToggleMenuItemAvailabilityCommandHandler(
     public async Task<ErrorOr<bool>> Handle(ToggleMenuItemAvailabilityCommand request, CancellationToken cancellationToken)
     {
         var query = dbContext.MenuItems.Where(x => x.Id == request.MenuItemId);
-        
         if(request.UserRole != UserRole.Admin)
             query = query.Where(x => x.Category.Restaurant.Owner.AppUserId == request.AppUserId);
         

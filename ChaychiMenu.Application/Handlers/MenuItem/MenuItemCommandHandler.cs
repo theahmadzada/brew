@@ -1,5 +1,6 @@
 using ChaychiMenu.Application.Commands.MenuItem;
 using ChaychiMenu.Application.Dto;
+using ChaychiMenu.Domain;
 using ChaychiMenu.Infrastructure.DbContext;
 
 using ErrorOr;
@@ -18,6 +19,14 @@ public class MenuItemCommandHandler(
 {
     public async Task<ErrorOr<MenuItemDto>> Handle(CreateMenuItemCommand request, CancellationToken cancellationToken)
     {
+        var query = dbContext.Categories.Where(x => x.Id == request.CategoryId);
+        if (request.UserRole != UserRole.Admin)
+            query = query.Where(x => x.Restaurant.Owner.AppUserId == request.AppUserId);
+        
+        var categoryExists = await query.AnyAsync(cancellationToken);
+        if (!categoryExists)
+            return Error.NotFound("Category.NotFound", "Category not found");
+        
         string? imageUrl = null;
         if (request.Image is not null && request.ContentType is not null)
             imageUrl = await storage.UploadAsync(request.Image, request.ContentType, cancellationToken);        
@@ -34,8 +43,7 @@ public class MenuItemCommandHandler(
         if(request.Order is null)
         {
             var menuItems = await dbContext.MenuItems
-                .Where(x => x.CategoryId == request.CategoryId 
-                            && x.Category.Restaurant.Owner.AppUserId == request.AppUserId)
+                .Where(x => x.CategoryId == request.CategoryId)
                 .CountAsync(cancellationToken);
             menuItem.Order = menuItems;
         }

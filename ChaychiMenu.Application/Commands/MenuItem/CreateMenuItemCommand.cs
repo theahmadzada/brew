@@ -18,6 +18,7 @@ public record CreateMenuItemCommand() : IRequest<ErrorOr<MenuItemDto>>
     public string? ContentType { get; init; }
     public decimal Price { get; init; }
     public int? Order { get; init; }
+    public required string UserRole { get; init; }
 }
 
 public class CreateMenuItemCommandValidator : AbstractValidator<CreateMenuItemCommand>

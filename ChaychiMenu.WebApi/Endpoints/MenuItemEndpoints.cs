@@ -26,6 +26,10 @@ public static class MenuItemEndpoints
             if (id is null)
                 return Results.Unauthorized();
             
+            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
+            if (userRole is null)
+                return Results.Unauthorized();
+            
             var request = new CreateMenuItemCommand
             {
                 AppUserId = id.Value,
@@ -35,7 +39,8 @@ public static class MenuItemEndpoints
                 Price = dto.Price,
                 Order = dto.Order,
                 Image = dto.Image?.OpenReadStream(),
-                ContentType = dto.Image?.ContentType
+                ContentType = dto.Image?.ContentType,
+                UserRole = userRole,
             };
             var result = await mediator.Send(request, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
@@ -44,12 +49,24 @@ public static class MenuItemEndpoints
         group.MapPatch("/id", async (
             Guid id,
             [FromBody] ToggleMenuItemAvailabilityDto request,
+            ClaimsPrincipal user,
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
+            var userId = user.GetAppUserId();
+            if (userId is null)
+                return Results.Unauthorized();
+            
+            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
+            if (userRole is null)
+                return Results.Unauthorized();
+            
             var command = new ToggleMenuItemAvailabilityCommand()
             {
-                MenuItemId = id, IsAvailable = request.IsAvailable
+                MenuItemId = id, 
+                IsAvailable = request.IsAvailable,
+                AppUserId = userId.Value,
+                UserRole = userRole,
             };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
