@@ -16,6 +16,11 @@ public class GetCategoriesAccordingToSlugQueryHandler(AppDbContext dbContext)
     public async Task<ErrorOr<List<GetCategoriesAccordintToSlugDto>>> Handle(GetCategoriesAccordingToSlugQuery request,
         CancellationToken cancellationToken)
     {
+        var restaurantExists = await dbContext.Restaurants
+            .AnyAsync(x => x.Slug == request.Slug, cancellationToken);
+        if(!restaurantExists)
+            return Error.NotFound("Restaurant.NotFound", "Restaurant not found");
+        
         return await dbContext.Categories
             .AsNoTracking()
             .Where(x => x.Restaurant.Slug == request.Slug)
