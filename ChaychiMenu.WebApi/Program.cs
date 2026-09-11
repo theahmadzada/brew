@@ -44,6 +44,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapOwnerEndpoints()
+    .MapAppUserEndpoints()
     .MapRestaurantEndpoints()
     .MapChainEndpoints()
     .MapCategoryEndpoints()
