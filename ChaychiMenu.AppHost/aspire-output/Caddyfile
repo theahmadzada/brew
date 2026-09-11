@@ -1,7 +1,7 @@
-chaychi.org {
+chaychi.vps.webdock.cloud {
     reverse_proxy webapi:8080
 }
 
-files.chaychi.org {
+files.chaychi.vps.webdock.cloud {
     reverse_proxy minio:9000
 }

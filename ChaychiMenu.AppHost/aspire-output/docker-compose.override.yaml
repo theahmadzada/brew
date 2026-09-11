@@ -1,6 +1,9 @@
+version: '3.8'
+
 services:
   caddy:
     image: caddy:2-alpine
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -9,21 +12,16 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     networks:
-      - aspire
-    restart: always
+      - default
     depends_on:
       - webapi
       - minio
 
   webapi:
-    ports: []   
+    ports: []
 
   minio:
     ports: []
-
-networks:
-  aspire:
-    external: false
 
 volumes:
   caddy_data:
