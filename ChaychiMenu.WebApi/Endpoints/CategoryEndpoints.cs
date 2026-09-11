@@ -35,12 +35,13 @@ public static class CategoryEndpoints
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
 
-        group.MapGet("/", async (
-            GetCategoriesAccordingToSlugCommand command,
+        group.MapGet("/{slug}", async (
+            string slug,
             ISender mediatr,
             CancellationToken cancellationToken) =>
         {
-            var result = await mediatr.Send(command, cancellationToken);
+            var query = new GetCategoriesAccordingToSlugQuery() { Slug = slug };
+            var result = await mediatr.Send(query, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
         

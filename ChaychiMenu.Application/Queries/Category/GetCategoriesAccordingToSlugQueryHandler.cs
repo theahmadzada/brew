@@ -8,12 +8,12 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ChaychiMenu.Application.Handlers.Category;
+namespace ChaychiMenu.Application.Queries.Category;
 
-public class GetCategoriesAccordingToSlugCommandHandler(AppDbContext dbContext)
-    : IRequestHandler<GetCategoriesAccordingToSlugCommand, ErrorOr<List<GetCategoriesAccordintToSlugDto>>>
+public class GetCategoriesAccordingToSlugQueryHandler(AppDbContext dbContext)
+    : IRequestHandler<GetCategoriesAccordingToSlugQuery, ErrorOr<List<GetCategoriesAccordintToSlugDto>>>
 {
-    public async Task<ErrorOr<List<GetCategoriesAccordintToSlugDto>>> Handle(GetCategoriesAccordingToSlugCommand request,
+    public async Task<ErrorOr<List<GetCategoriesAccordintToSlugDto>>> Handle(GetCategoriesAccordingToSlugQuery request,
         CancellationToken cancellationToken)
     {
         return await dbContext.Categories
