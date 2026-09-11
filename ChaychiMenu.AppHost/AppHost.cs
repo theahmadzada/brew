@@ -30,9 +30,13 @@ builder.AddProject<Projects.ChaychiMenu_WebApi>("webapi")
     .WaitFor(redis)
     .WithReference(minio)
     .WaitFor(minio)
-    .WithEnvironment("JwtSettings_Issuer", jwtIssuer)
-    .WithEnvironment("JwtSettings_Audience", jwtAudience)
-    .WithEnvironment("JwtSettings_SigningKey", jwtSigningKey)
-    .WithEnvironment("RefreshTokenSettings_Key", refreshTokenKey);
+    .WithEnvironment("JwtSettings__Issuer", jwtIssuer)
+    .WithEnvironment("JwtSettings__Audience", jwtAudience)
+    .WithEnvironment("JwtSettings__SigningKey", jwtSigningKey)
+    .WithEnvironment("RefreshTokenSettings__Key", refreshTokenKey)
+    .PublishAsDockerComposeService((resource, service) =>
+    {
+        service.Ports = ["5100:8080"];
+    });
 
 builder.Build().Run();
