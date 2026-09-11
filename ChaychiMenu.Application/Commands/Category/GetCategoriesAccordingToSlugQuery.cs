@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ChaychiMenu.Application.Commands.Category;
 
-public record GetCategoriesAccordingToSlugCommand : IRequest<ErrorOr<List<GetCategoriesAccordintToSlugDto>>>
+public record GetCategoriesAccordingToSlugQuery : IRequest<ErrorOr<List<GetCategoriesAccordintToSlugDto>>>
 {
     public required string Slug { get; init; }
 }

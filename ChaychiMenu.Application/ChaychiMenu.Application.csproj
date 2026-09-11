@@ -11,8 +11,8 @@
       <PackageReference Include="FluentValidation" Version="12.1.1" />
       <PackageReference Include="MediatR" Version="14.2.0" />
       <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
-      <PackageReference Include="Microsoft.AspNetCore.JsonPatch.SystemTextJson" Version="10.0.11" />
-      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.11" />
+      <PackageReference Include="Microsoft.AspNetCore.JsonPatch.SystemTextJson" Version="10.0.12" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.12" />
       <PackageReference Include="Slugify.Core" Version="5.1.1" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
     </ItemGroup>
