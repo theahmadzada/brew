@@ -18,8 +18,7 @@ public static class CategoryEndpoints
             CreateCategoryDto request,
             ClaimsPrincipal user,
             ISender mediatr,
-            CancellationToken cancellationToken
-            ) =>
+            CancellationToken cancellationToken) =>
         {
             var id = user.GetAppUserId();
             if (id is null)
@@ -32,6 +31,15 @@ public static class CategoryEndpoints
                 RestaurantId = request.RestaurantId,
                 Order = request.Order
             };
+            var result = await mediatr.Send(command, cancellationToken);
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
+        });
+
+        group.MapGet("/", async (
+            GetCategoriesAccordingToSlugCommand command,
+            ISender mediatr,
+            CancellationToken cancellationToken) =>
+        {
             var result = await mediatr.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
