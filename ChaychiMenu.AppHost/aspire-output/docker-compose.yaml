@@ -21,7 +21,7 @@ services:
     volumes:
       - type: "volume"
         target: "/var/lib/postgresql"
-        source: "rms.apphost-def4e36209-rms-data"
+        source: "chaychimenu.apphost-37a564a6e5-rms-data"
         read_only: false
     networks:
       - "aspire"
@@ -74,7 +74,7 @@ services:
     volumes:
       - type: "volume"
         target: "/data"
-        source: "rms.apphost-def4e36209-minio-data"
+        source: "chaychimenu.apphost-37a564a6e5-minio-data"
         read_only: false
     networks:
       - "aspire"
@@ -103,11 +103,15 @@ services:
       MINIO_ACCESSKEY: "${USER}"
       MINIO_SECRETKEY: "${MINIO_ROOTPASSWORD}"
       MINIO_URI: "http://minio:9000"
+      JwtSettings__Issuer: "${JWT_ISSUER}"
+      JwtSettings__Audience: "${JWT_AUDIENCE}"
+      JwtSettings__SigningKey: "${JWT_SIGNING_KEY}"
+      RefreshTokenSettings__Key: "${REFRESH_TOKEN_KEY}"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://docker-compose-dashboard:18889"
       OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
       OTEL_SERVICE_NAME: "webapi"
     ports:
-      - "${WEBAPI_PORT}"
+      - "5100:8080"
     depends_on:
       rms:
         condition: "service_started"
@@ -123,7 +127,7 @@ networks:
   aspire:
     driver: "bridge"
 volumes:
-  rms.apphost-def4e36209-rms-data:
+  chaychimenu.apphost-37a564a6e5-rms-data:
     driver: "local"
-  rms.apphost-def4e36209-minio-data:
+  chaychimenu.apphost-37a564a6e5-minio-data:
     driver: "local"
