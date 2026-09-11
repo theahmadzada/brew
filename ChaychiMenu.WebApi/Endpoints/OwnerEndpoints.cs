@@ -4,7 +4,6 @@ using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
 
-using ChaychiMenu.Application.Commands.AppUser;
 using ChaychiMenu.Application.Commands.Owner;
 using ChaychiMenu.Application.Dto;
 using ChaychiMenu.Domain;
@@ -26,9 +25,7 @@ public static class OwnerEndpoints
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
-
         
-
         group.MapPost("/otp", async (
             GenerateTelegramOtpCommand request,
             ISender mediator,
