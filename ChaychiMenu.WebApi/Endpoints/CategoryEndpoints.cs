@@ -4,6 +4,7 @@ using MediatR;
 
 using ChaychiMenu.Application.Commands.Category;
 using ChaychiMenu.Application.Dto;
+using ChaychiMenu.Application.Queries.Category;
 using ChaychiMenu.WebApi.Extensions;
 
 namespace ChaychiMenu.WebApi.Endpoints;

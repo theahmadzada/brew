@@ -1,5 +1,5 @@
-using ChaychiMenu.Application.Commands.Category;
 using ChaychiMenu.Application.Dto;
+using ChaychiMenu.Application.Queries.Category;
 using ChaychiMenu.Infrastructure.DbContext;
 
 using ErrorOr;
@@ -8,7 +8,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ChaychiMenu.Application.Queries.Category;
+namespace ChaychiMenu.Application.Handlers.Category;
 
 public class GetCategoriesAccordingToSlugQueryHandler(AppDbContext dbContext)
     : IRequestHandler<GetCategoriesAccordingToSlugQuery, ErrorOr<List<GetCategoriesAccordintToSlugDto>>>
