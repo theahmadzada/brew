@@ -43,7 +43,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapOwnerEndpoints()
+app.MapDefaultEndpoints()
+    .MapOwnerEndpoints()
     .MapAppUserEndpoints()
     .MapRestaurantEndpoints()
     .MapChainEndpoints()
