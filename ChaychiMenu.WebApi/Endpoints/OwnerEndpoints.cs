@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +6,7 @@ using ChaychiMenu.Application.Commands.Owner;
 using ChaychiMenu.Application.Dto;
 using ChaychiMenu.Domain;
 using ChaychiMenu.WebApi.Extensions;
+using ChaychiMenu.WebApi.Filters;
 
 namespace ChaychiMenu.WebApi.Endpoints;
 
@@ -57,21 +56,18 @@ public static class OwnerEndpoints
 
         group.MapPost("/password", async (
             [FromBody] ChangePasswordDto dto,
-            ClaimsPrincipal user,
+            HttpContext httpContext,
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var id = user.GetAppUserId();
-            if (id is null)
-                return Results.Unauthorized();
-
             var command = new ChangeOwnerPasswordCommand()
             {
-                AppUserId = id.Value, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
+                AppUserId = (Guid)httpContext.Items["AppUserId"]!, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
             };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        }).RequireAuthorization(policy => policy.RequireRole(UserRole.Owner));
+        }).AddEndpointFilter<RequireAppUserFilter>()
+            .RequireAuthorization(policy => policy.RequireRole(UserRole.Owner));
 
         group.MapDelete("/{id}", async (
             Guid id,

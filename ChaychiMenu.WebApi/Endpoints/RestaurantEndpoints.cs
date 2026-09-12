@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ChaychiMenu.Application.Commands.Restaurant;
 using ChaychiMenu.Application.Dto;
 using ChaychiMenu.WebApi.Extensions;
+using ChaychiMenu.WebApi.Filters;
 
 namespace ChaychiMenu.WebApi.Endpoints;
 
@@ -18,18 +17,14 @@ public static class RestaurantEndpoints
 
         group.MapPost("/", async (
             [FromBody] CreateRestaurantDto request,
-            ClaimsPrincipal user,
+            HttpContext httpContext,
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var id = user.GetAppUserId();
-            if (id is null)
-                return Results.Unauthorized();
-            
-            var command = new CreateRestaurantCommand() { Name = request.Name, AppUserId = id.Value };
+            var command = new CreateRestaurantCommand() { Name = request.Name, AppUserId = (Guid)httpContext.Items["AppUserId"]! };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        });
+        }).AddEndpointFilter<RequireAppUserFilter>();
         
         return app;
     }

@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +6,7 @@ using ChaychiMenu.Application.Commands.MenuItem;
 using ChaychiMenu.Application.Dto;
 using ChaychiMenu.Application.Queries.MenuItem;
 using ChaychiMenu.WebApi.Extensions;
+using ChaychiMenu.WebApi.Filters;
 
 namespace ChaychiMenu.WebApi.Endpoints;
 
@@ -18,60 +17,47 @@ public static class MenuItemEndpoints
         var group = app.MapGroup("api/menu-items");
 
         group.MapPost("/", async (
-            [FromForm] CreateMenuItemDto dto,
-            ClaimsPrincipal user,
-            ISender mediator,
-            CancellationToken cancellationToken) =>
-        {
-            var id = user.GetAppUserId();
-            if (id is null)
-                return Results.Unauthorized();
-            
-            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
-            if (userRole is null)
-                return Results.Unauthorized();
-            
-            var request = new CreateMenuItemCommand
+                [FromForm] CreateMenuItemDto dto,
+                HttpContext httpContext,
+                ISender mediator,
+                CancellationToken cancellationToken) =>
             {
-                AppUserId = id.Value,
-                Title = dto.Title,
-                Description = dto.Description,
-                CategoryId = dto.CategoryId,
-                Price = dto.Price,
-                Order = dto.Order,
-                Image = dto.Image?.OpenReadStream(),
-                ContentType = dto.Image?.ContentType,
-                UserRole = userRole,
-            };
-            var result = await mediator.Send(request, cancellationToken);
-            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        }).DisableAntiforgery();
+                var request = new CreateMenuItemCommand
+                {
+                    AppUserId = (Guid)httpContext.Items["AppUserId"]!,
+                    Title = dto.Title,
+                    Description = dto.Description,
+                    CategoryId = dto.CategoryId,
+                    Price = dto.Price,
+                    Order = dto.Order,
+                    Image = dto.Image?.OpenReadStream(),
+                    ContentType = dto.Image?.ContentType,
+                    UserRole = httpContext.Items["UserRole"]!.ToString()!
+                };
+                var result = await mediator.Send(request, cancellationToken);
+                return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
+            }).AddEndpointFilter<RequireAppUserFilter>()
+            .AddEndpointFilter<RequireAppRoleFilter>()
+            .DisableAntiforgery();
 
         group.MapPatch("/{id}", async (
             Guid id,
             [FromBody] ToggleMenuItemAvailabilityDto request,
-            ClaimsPrincipal user,
+            HttpContext httpContext,
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var userId = user.GetAppUserId();
-            if (userId is null)
-                return Results.Unauthorized();
-            
-            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
-            if (userRole is null)
-                return Results.Unauthorized();
-            
             var command = new ToggleMenuItemAvailabilityCommand()
             {
                 MenuItemId = id, 
-                IsAvailable = request.IsAvailable,
-                AppUserId = userId.Value,
-                UserRole = userRole,
+                IsAvailable = request.IsAvailable, 
+                AppUserId = (Guid)httpContext.Items["AppUserId"]!, 
+                UserRole = httpContext.Items["UserRole"]!.ToString()!,
             };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        });
+        }).AddEndpointFilter<RequireAppUserFilter>()
+        .AddEndpointFilter<RequireAppRoleFilter>();
 
         group.MapGet("/{id}", async (
             Guid id,
@@ -82,7 +68,7 @@ public static class MenuItemEndpoints
             var result = await mediator.Send(query, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
-        
+
         return app;
     }
 }

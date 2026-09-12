@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +7,7 @@ using ChaychiMenu.Application.Dto;
 using ChaychiMenu.Application.Queries.Chain;
 using ChaychiMenu.Domain;
 using ChaychiMenu.WebApi.Extensions;
+using ChaychiMenu.WebApi.Filters;
 
 namespace ChaychiMenu.WebApi.Endpoints;
 
@@ -20,47 +19,38 @@ public static class ChainEndpoints
 
         group.MapPost("/", async (
             [FromBody] CreateChainDto dto,
-            ClaimsPrincipal user,
+            HttpContext httpContext,
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var id = user.GetAppUserId();
-            if (id is null)
-                return Results.Unauthorized();
-
-            var command = new CreateChainCommand() { Name = dto.Name, AppUserId = id.Value };
+            var command = new CreateChainCommand() { Name = dto.Name, AppUserId = (Guid)httpContext.Items["AppUserId"]! };
             var result = await mediator.Send(command, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));
+        }).AddEndpointFilter<RequireAppUserFilter>()
+            .RequireAuthorization(options => options.RequireRole(UserRole.Owner));
 
         group.MapGet("/{id}", async (
             Guid id,
-            ClaimsPrincipal user,
+            HttpContext httpContext,
             ISender mediator,
             CancellationToken cancellationToken) =>
         {
-            var ownerId = user.GetAppUserId();
-            if (ownerId is null)
-                return Results.Unauthorized();
-
-            var query = new GetChainByIdQuery() { Id = id, OwnerId = ownerId.Value };
+            var query = new GetChainByIdQuery() { Id = id, OwnerId = (Guid)httpContext.Items["AppUserId"]! };
             var result = await mediator.Send(query, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));
+        }).AddEndpointFilter<RequireAppUserFilter>()
+            .RequireAuthorization(options => options.RequireRole(UserRole.Owner));
 
         group.MapGet("/", async (
-            ClaimsPrincipal user,
+            HttpContext httpContext,
             IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var ownerId = user.GetAppUserId();
-            if (ownerId is null)
-                return Results.Unauthorized();
-
-            var query = new GetAllOwnerChainsQuery() { AppUserId = ownerId.Value };
+            var query = new GetAllOwnerChainsQuery() { AppUserId = (Guid)httpContext.Items["AppUserId"]! };
             var result = await mediator.Send(query, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
-        }).RequireAuthorization(options => options.RequireRole(UserRole.Owner));
+        }).AddEndpointFilter<RequireAppUserFilter>()
+            .RequireAuthorization(options => options.RequireRole(UserRole.Owner));
 
         return app;
     }
