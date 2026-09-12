@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using ChaychiMenu.Application.Commands.MenuItem;
 using ChaychiMenu.Application.Dto;
+using ChaychiMenu.Application.Queries.MenuItem;
 using ChaychiMenu.WebApi.Extensions;
 
 namespace ChaychiMenu.WebApi.Endpoints;
@@ -46,7 +47,7 @@ public static class MenuItemEndpoints
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         }).DisableAntiforgery();
 
-        group.MapPatch("/id", async (
+        group.MapPatch("/{id}", async (
             Guid id,
             [FromBody] ToggleMenuItemAvailabilityDto request,
             ClaimsPrincipal user,
@@ -69,6 +70,16 @@ public static class MenuItemEndpoints
                 UserRole = userRole,
             };
             var result = await mediator.Send(command, cancellationToken);
+            return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
+        });
+
+        group.MapGet("/{id}", async (
+            Guid id,
+            ISender mediator,
+            CancellationToken cancellationToken) =>
+        {
+            var query = new GetMenuItemByIdQuery() { Id = id };
+            var result = await mediator.Send(query, cancellationToken);
             return result.Match(value => Results.Ok(value), errors => errors.ToProblem());
         });
         

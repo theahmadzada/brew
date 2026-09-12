@@ -4,7 +4,7 @@ using ErrorOr;
 
 using MediatR;
 
-namespace ChaychiMenu.Application.Commands.Category;
+namespace ChaychiMenu.Application.Queries.Category;
 
 public record GetCategoriesAccordingToSlugQuery : IRequest<ErrorOr<List<GetCategoriesAccordintToSlugDto>>>
 {
